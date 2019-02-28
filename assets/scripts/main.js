@@ -17,7 +17,7 @@ function preload() {
 
 function setup() {
   let canvas = createCanvas(appWidth, windowHeight);
-  frameRate(60);
+  // frameRate(60);
   canvas.parent("page_body");
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
