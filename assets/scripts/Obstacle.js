@@ -35,6 +35,7 @@ class Obstacle{
 class Obstacle_Component{ 
     constructor(gap, top = true){
         this.x = appWidth;
+        this.top = top;
         if (top) {
             this.height = gap - (gapHeight / 2);
             this.y = 0; 
@@ -48,8 +49,6 @@ class Obstacle_Component{
             player.x <= this.x + obstacleWidth && 
             player.bottom() >= this.y && 
             player.top() <= this.y + this.height){
-                // player.y + player.height
-                // player.y
             return true;
         }
         return false;
@@ -61,11 +60,24 @@ class Obstacle_Component{
         this.x -= 2 * speed;
     }
     show(){
-        fill(11, 102, 35);
-        if (this.top) {
+        fill(75, 20);
+        if (this.top == true) {
             rect(this.x, this.y, obstacleWidth, this.height);
+            if (past_deaths % 2 == 0){
+                image(obs_top_1, this.x, this.y - 1000 + this.height, obstacleWidth, 1000);
+            } else {
+                image(obs_top_2, this.x, this.y - 1000 + this.height, obstacleWidth, 1000);
+            }
+            // image(obs_top_1, this.x+60, this.y, obstacleWidth, this.height);
+            // }
         } else {
             rect(this.x, this.y, obstacleWidth, this.height);
+            if (past_deaths % 2 == 0){
+                image(obs_bot_1, this.x, this.y, obstacleWidth, 1000);
+            } else {
+                image(obs_bot_2, this.x, this.y, obstacleWidth, 1000);
+            }
+            // image(obs_top_1, this.x, this.y);
         }
     }
 }

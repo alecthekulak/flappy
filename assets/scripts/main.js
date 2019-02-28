@@ -2,12 +2,11 @@ let speed = 1;
 let gravity = 0.5; 
 let appWidth = 500; 
 let appHeight = 650; 
-let obstacleWidth = 60; 
+let obstacleWidth = 90; // 60
 let gapHeight = 120; 
 let canvas;
 // 
-var score_counter; 
-var past_taps; 
+var score_counter, past_deaths, past_taps; 
 var manual = true; 
 // Variables 
 var obstacle_0, obstacle_1; 
@@ -16,6 +15,10 @@ var bird_down, bird_up;
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
   bird_up = loadImage("assets/images/bird_up_wings.png");
+  obs_bot_1 = loadImage("assets/images/bottom_obstacle.png");
+  obs_bot_2 = loadImage("assets/images/bottom_obstacle2.png");
+  obs_top_1 = loadImage("assets/images/top_obstacle.png");
+  obs_top_2 = loadImage("assets/images/top_obstacle2.png");
   // bird_down = loadImage("../assets/images/bird_down_wings.png"); // no
   // bird_down = loadImage("./assets/images/bird_down_wings.png"); 
   // bird_down = loadImage("/assets/images/bird_down_wings.png");
@@ -27,35 +30,27 @@ function preload() {
 }
 
 function setup() {
-  if (displayWidth < appWidth) {
-    appWidth = displayWidth; 
-  } 
-  if (windowWidth < appWidth) {
-    appWidth = windowWidth;
-  }
-  if (displayHeight > windowHeight) {
-    canvas = createCanvas(appWidth, windowHeight);
-    if (windowHeight < appHeight) {
-      appHeight = windowHeight - 15; 
-    }
-  } else {
-    canvas = createCanvas(appWidth, displayHeight);
-    if (displayHeight < appHeight) {
-      appHeight = displayHeight - 15; 
-    }
+  canvas = createCanvas(appWidth, windowHeight);
+  if (windowHeight < appHeight) {
+    appHeight = windowHeight - 15; 
   }
   // frameRate(60);
   canvas.parent('p5Container');
-  // canvas.parent("page_body");
+  past_deaths = 0; 
+  noStroke();
+  player = new Player(); 
   start(); 
 }
   
 function draw() {
+  // Sky
   background("white");
+  // Obstacles 
+  obstacle_0.update_show(player);
   // Ground 
   if (player.isDead()) {
     fill(0);
-    textSize(70);
+    textSize(70 + past_deaths);
     textAlign(CENTER, CENTER); 
     text("YOU LOSE!", appWidth/2, appHeight/2);
     fill(255, 0, 0);
@@ -66,13 +61,12 @@ function draw() {
     fill(153, 102, 51);
   }
   rect(0, appHeight, appWidth, windowHeight - appHeight);
-  // Obstacles 
-  obstacle_0.update_show(player);
   // Score Counter
   fill(0);
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
+  text("Past deaths: " + past_deaths.toString(), 11, 38);
   // github.io code doesn't reflect changes made on github.com?
   // textSize(40);
   // textAlign(LEFT, CENTER); 
@@ -92,6 +86,9 @@ function draw() {
 }
 
 function start() {
+  if (player.isDead()) {
+    past_deaths++; 
+  }  
   player = new Player(); 
   obstacle_0 = new Obstacle(2 * appHeight / 4);
   obstacle_1 = new Obstacle();
