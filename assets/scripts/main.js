@@ -6,7 +6,9 @@ let obstacleWidth = 90; // 60
 let gapHeight = 120; 
 let canvas;
 // 
-var score_counter, past_deaths, past_taps; 
+var score_counter, past_deaths, past_taps;
+var bg_size; 
+var i, j; 
 var manual = true; 
 // Variables 
 var obstacle_0, obstacle_1; 
@@ -19,6 +21,7 @@ function preload() {
   obs_bot_2 = loadImage("assets/images/bottom_obstacle2.png");
   obs_top_1 = loadImage("assets/images/top_obstacle.png");
   obs_top_2 = loadImage("assets/images/top_obstacle2.png");
+  bg_section = loadImage("assets/images/bg_section.png");
   // bird_down = loadImage("../assets/images/bird_down_wings.png"); // no
   // bird_down = loadImage("./assets/images/bird_down_wings.png"); 
   // bird_down = loadImage("/assets/images/bird_down_wings.png");
@@ -39,12 +42,18 @@ function setup() {
   past_deaths = 0; 
   noStroke();
   player = new Player(); 
+  bg_size = 64;
   start(); 
 }
   
 function draw() {
   // Sky
   background("white");
+  for (i = 0; i < 5; i++) { 
+    for (j = 0; j < 6; j++) {
+      image(bg_section, bg_size*i, bg_size*j, bg_size, bg_size);
+    }
+  }
   // Obstacles 
   obstacle_0.update_show(player);
   // Ground 
