@@ -72,12 +72,12 @@ function draw() {
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
-  textSize(40);
-  textAlign(LEFT, CENTER); 
-  text("window height: " + windowHeight.toString(), appWidth / 4, 50);
-  text("display height: " + displayHeight.toString(), appWidth / 4, 100);
-  text("window width: " + windowWidth.toString(), appWidth / 4, 150);
-  text("display width: " + displayWidth.toString(), appWidth / 4, 200);
+  // textSize(40);
+  // textAlign(LEFT, CENTER); 
+  // text("window height: " + windowHeight.toString(), appWidth / 4, 50);
+  // text("display height: " + displayHeight.toString(), appWidth / 4, 100);
+  // text("window width: " + windowWidth.toString(), appWidth / 4, 150);
+  // text("display width: " + displayWidth.toString(), appWidth / 4, 200);
   // Maybe instructions on buttons to press over the Earth? 
   // Temp
   // text("player age:" + player.age.toString(), appWidth / 4, 250);
