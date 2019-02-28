@@ -4,10 +4,12 @@ let appWidth = 500;
 let appHeight = 650; 
 let obstacleWidth = 60; 
 let gapHeight = 120; 
+// 
 var score_counter; 
+var past_taps; 
 var manual = true; 
-var obstacle_0; 
-
+// Variables 
+var obstacle_0, obstacle_1; 
 var bird_down, bird_up; 
 
 function preload() {
@@ -77,6 +79,7 @@ function start() {
   score_counter = 0; 
   textSize(20);
   textAlign(LEFT, CENTER); 
+  past_taps = 0
 }
 
 
@@ -85,25 +88,32 @@ function mousePressed() {
   // var d = dist(mouseX, mouseY, appWidth/2, appHeight/2);
   if (0 < mouseX && mouseX <= appWidth &&
       0 < mouseY && mouseY <= appHeight) {
-    if (manual) {
+    if (manual && !player.isDead()) {
       player.flap(); 
+    } else if (manual && player.isDead()) {
+      past_taps++; 
+      if (past_taps >= 3) {
+        start(); 
+      }
     }
   } else if (0 < mouseX && mouseX <= appWidth &&
           appHeight <= mouseY && mouseY <= windowHeight) {
-      if (manual && player.isDead()) {
-        start(); 
-      }
+    if (manual && player.isDead()) {
+      start(); 
+    }
 
   }
 }
 
 function keyPressed() {
   if (key == ' ') {
-    if (manual) {
+    if (manual && !player.isDead()) {
       player.flap(); 
     }
   } else if (key == 'r' || key == 'R') {
-    start(); 
+    if (manual && player.isDead()) {
+      start(); 
+    }
   } else if (key == 'p' || key == 'P') {
     pause();
   }

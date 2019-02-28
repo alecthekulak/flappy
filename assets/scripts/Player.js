@@ -37,6 +37,7 @@ class Player{
     }
     isDead(yes = false) {
         if (yes) {
+            past_taps = 0; 
             this.dead = true; 
         } 
         return this.dead; 
