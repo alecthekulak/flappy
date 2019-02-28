@@ -105,7 +105,22 @@ function start() {
 }
 
 function touchStarted() {
-  mousePressed();
+  if (0 < touchX && touchX <= appWidth &&
+      0 < touchY && touchY <= appHeight) {
+    if (manual && !player.isDead()) {
+      player.flap(); 
+    } else if (manual && player.isDead()) {
+      past_taps++; 
+      if (past_taps >= 3) {
+        start(); 
+      }
+    }
+  } else if (0 < touchX && touchX <= appWidth &&
+          appHeight <= touchY && touchY <= windowHeight) {
+    if (manual && player.isDead()) {
+      start(); 
+    }
+  }
 }
 function mousePressed() {
   if (0 < mouseX && mouseX <= appWidth &&
@@ -123,7 +138,6 @@ function mousePressed() {
     if (manual && player.isDead()) {
       start(); 
     }
-
   }
 }
 

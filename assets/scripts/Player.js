@@ -45,7 +45,7 @@ class Player{
     flap() {
         this.flapping = 9; 
         if (speed !== 0) {
-            this.speed_y += 14; 
+            this.speed_y += 13; 
         }
     }
     top() {
