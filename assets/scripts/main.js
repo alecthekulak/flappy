@@ -82,10 +82,10 @@ function start() {
   past_taps = 0
 }
 
-
+function touchStarted() {
+  mousePressed();
+}
 function mousePressed() {
-  // Check if mouse is inside the circle
-  // var d = dist(mouseX, mouseY, appWidth/2, appHeight/2);
   if (0 < mouseX && mouseX <= appWidth &&
       0 < mouseY && mouseY <= appHeight) {
     if (manual && !player.isDead()) {

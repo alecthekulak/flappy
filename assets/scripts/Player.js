@@ -13,9 +13,9 @@ class Player{
         this.flapping = 0; 
     }
     update() { 
-        // Bound maximum speed between -20 and 40 
-        if (this.speed_y > 40) {
-            this.speed_y = 40;
+        // Bound maximum speed between -20 and 24 //edit this?, top speed especially  
+        if (this.speed_y > 24) {
+            this.speed_y = 24;
         } else if (this.speed_y < -20) {
             this.speed_y = -20;
         }
