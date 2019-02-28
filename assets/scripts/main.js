@@ -45,7 +45,7 @@ function setup() {
   noStroke();
   player = new Player(); 
   bg_size = bg_section.width;
-  ground_size = ground_top.width * 2;
+  ground_size = ground_top.width * 1.5;
   start(); 
 }
   
@@ -63,15 +63,14 @@ function draw() {
   obstacle_0.update_show(player);
   // Ground 
   for (i = 0; i <= 2+~~(appWidth/ground_size); i++) { 
-    image(ground_top, ground_size*i - (player.age*0.5 % ground_size), appHeight, ground_size, ground_size);
+    image(ground_top, ground_size*i - (player.age*0.35 % ground_size), appHeight, ground_size, ground_size);
     for (j = 1; j <= 2+~~(appHeight/ground_size); j++) {
-      image(ground_bot, ground_size*i - (player.age*0.5 % ground_size), appHeight + ground_size*j, ground_size, ground_size);
+      image(ground_bot, ground_size*i - (player.age*0.35 % ground_size), appHeight + ground_size*j, ground_size, ground_size);
     }
   }
-  // rect(0, appHeight, appWidth, windowHeight - appHeight);
   // Is dead? 
+  fill(0);
   if (player.isDead()) {
-    fill(30);
     textSize(70 + past_deaths*2);
     textAlign(CENTER, CENTER); 
     text("YOU LOSE!", appWidth/2, appHeight/2);
@@ -80,27 +79,13 @@ function draw() {
     }
   }
   // Score Counter
-  fill(0);
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
-  text("Past deaths: " + past_deaths.toString(), 11, 38);
-  // github.io code doesn't reflect changes made on github.com?
-  // textSize(40);
-  // textAlign(LEFT, CENTER); 
-  // text("window height: " + windowHeight.toString(), appWidth / 4, 50);
-  // text("display height: " + displayHeight.toString(), appWidth / 4, 100);
-  // text("window width: " + windowWidth.toString(), appWidth / 4, 150);
-  // text("display width: " + displayWidth.toString(), appWidth / 4, 200);
-  // Maybe instructions on buttons to press over the Earth? 
-  // Temp
-  // text("player age:" + player.age.toString(), appWidth / 4, 250);
-  // text("player top:" + player.top().toString(), appWidth / 4, 250);
-  // text("player y:" + player.y.toString(), appWidth / 4, 300);
+  text("Deaths: " + past_deaths.toString(), 11, 40);
   // Player 
   player.update(); 
   player.show(); 
-
 }
 
 function start() {
@@ -155,7 +140,6 @@ function mousePressed() {
     }
   }
 }
-
 function keyPressed() {
   if (key == ' ') {
     if (manual && !player.isDead()) {
