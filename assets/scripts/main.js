@@ -72,6 +72,7 @@ function draw() {
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
+  // github.io code doesn't reflect changes made on github.com?
   // textSize(40);
   // textAlign(LEFT, CENTER); 
   // text("window height: " + windowHeight.toString(), appWidth / 4, 50);
