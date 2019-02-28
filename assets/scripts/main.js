@@ -71,6 +71,19 @@ function start() {
   textAlign(LEFT, CENTER); 
 }
 
+
+function mousePressed() {
+  // Check if mouse is inside the circle
+  // var d = dist(mouseX, mouseY, appWidth/2, appHeight/2);
+  if (0 < mouseX && mouseX <= appWidth &&
+      0 < mouseY && mouseY <= appHeight) {
+    if (manual) {
+      player.flap(); 
+    }
+    
+  }
+}
+
 function keyPressed() {
   if (key == ' ') {
     if (manual) {
