@@ -1,7 +1,7 @@
 /*! p5.dom.js v0.4.0 August 9, 2018 */
 /**
  * <p>The web is much more than just canvas and p5.dom makes it easy to interact
- * with other HTML5 objects, including text, hyperlink, image, input, video,
+ * with other HTML5 objects, including text, hyperlink, image, input, video, 
  * audio, and webcam.</p>
  * <p>There is a set of creation methods, DOM manipulation methods, and
  * an extended <a href="#/p5.Element">p5.Element</a> that supports a range of HTML elements. See the

@@ -11,7 +11,7 @@ class Obstacle{
 
     }
     collide(player){
-        if (this.top.collide(player) || this.bot.collide(player)) {
+        if (this.top.collide(player) || this.bot.collide(player)) { 
             return true;
         } 
         return false; 
