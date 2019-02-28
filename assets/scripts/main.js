@@ -88,7 +88,12 @@ function mousePressed() {
     if (manual) {
       player.flap(); 
     }
-    
+  } else if (0 < mouseX && mouseX <= appWidth &&
+          appHeight <= mouseY && mouseY <= windowHeight) {
+      if (manual && player.isDead()) {
+        start(); 
+      }
+
   }
 }
 
