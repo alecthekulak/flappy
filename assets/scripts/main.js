@@ -7,7 +7,7 @@ let gapHeight = 120;
 let canvas;
 // 
 var score_counter, past_deaths, past_taps;
-var bg_size; 
+var bg_size, ground_size; 
 var i, j; 
 var manual = true; 
 // Variables 
@@ -22,6 +22,8 @@ function preload() {
   obs_top_1 = loadImage("assets/images/top_obstacle.png");
   obs_top_2 = loadImage("assets/images/top_obstacle2.png");
   bg_section = loadImage("assets/images/bg_section.png");
+  ground_top = loadImage("assets/images/ground_top.png");
+  ground_bot = loadImage("assets/images/ground_bot.png");
   // bird_down = loadImage("../assets/images/bird_down_wings.png"); // no
   // bird_down = loadImage("./assets/images/bird_down_wings.png"); 
   // bird_down = loadImage("/assets/images/bird_down_wings.png");
@@ -42,34 +44,41 @@ function setup() {
   past_deaths = 0; 
   noStroke();
   player = new Player(); 
-  bg_size = 64;
+  bg_size = bg_section.width;
+  ground_size = ground_top.width * 2;
   start(); 
 }
   
 function draw() {
   // Sky
   background("white");
-  for (i = 0; i < 5; i++) { 
-    for (j = 0; j < 6; j++) {
-      image(bg_section, bg_size*i, bg_size*j, bg_size, bg_size);
+  tint(255, 100); 
+  for (i = 0; i <= 2+~~(appWidth/bg_size); i++) { 
+    for (j = 0; j <= ~~(appHeight/bg_size); j++) {
+      image(bg_section, bg_size*i - (player.age % bg_size), bg_size*j, bg_size, bg_size);
     }
   }
+  noTint();
   // Obstacles 
   obstacle_0.update_show(player);
   // Ground 
+  for (i = 0; i <= 2+~~(appWidth/ground_size); i++) { 
+    image(ground_top, ground_size*i - (player.age*0.5 % ground_size), appHeight, ground_size, ground_size);
+    for (j = 1; j <= 2+~~(appHeight/ground_size); j++) {
+      image(ground_bot, ground_size*i - (player.age*0.5 % ground_size), appHeight + ground_size*j, ground_size, ground_size);
+    }
+  }
+  // rect(0, appHeight, appWidth, windowHeight - appHeight);
+  // Is dead? 
   if (player.isDead()) {
-    fill(0);
-    textSize(70 + past_deaths);
+    fill(30);
+    textSize(70 + past_deaths*2);
     textAlign(CENTER, CENTER); 
     text("YOU LOSE!", appWidth/2, appHeight/2);
-    fill(255, 0, 0);
     if (speed !== 0 && manual) {
       pause();
     }
-  } else { 
-    fill(153, 102, 51);
   }
-  rect(0, appHeight, appWidth, windowHeight - appHeight);
   // Score Counter
   fill(0);
   textSize(20);
