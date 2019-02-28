@@ -4,6 +4,7 @@ let appWidth = 500;
 let appHeight = 650; 
 let obstacleWidth = 60; 
 let gapHeight = 120; 
+let canvas;
 // 
 var score_counter; 
 var past_taps; 
@@ -26,12 +27,25 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(appWidth, windowHeight);
+  if (displayWidth < appWidth) {
+    appWidth = displayWidth; 
+  } 
+  if (windowWidth < appWidth) {
+    appWidth = windowWidth;
+  }
+  if (displayHeight > windowHeight) {
+    canvas = createCanvas(appWidth, windowHeight);
+    if (windowHeight < appHeight) {
+      appHeight = windowHeight - 15; 
+    }
+  } else {
+    canvas = createCanvas(appWidth, displayHeight);
+    if (displayHeight < appHeight) {
+      appHeight = displayHeight - 15; 
+    }
+  }
   // frameRate(60);
   canvas.parent("page_body");
-  if (windowHeight < appHeight) {
-    appHeight = windowHeight - 15; 
-  }
   start(); 
 }
   
@@ -58,6 +72,12 @@ function draw() {
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
+  textSize(40);
+  textAlign(LEFT, CENTER); 
+  text("window height: " + windowHeight.toString(), appWidth / 4, 50);
+  text("display height: " + displayHeight.toString(), appWidth / 4, 100);
+  text("window width: " + windowWidth.toString(), appWidth / 4, 150);
+  text("display width: " + displayWidth.toString(), appWidth / 4, 200);
   // Maybe instructions on buttons to press over the Earth? 
   // Temp
   // text("player age:" + player.age.toString(), appWidth / 4, 250);

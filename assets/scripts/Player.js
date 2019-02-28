@@ -14,8 +14,8 @@ class Player{
     }
     update() { 
         // Bound maximum speed between -20 and 24 //edit this?, top speed especially  
-        if (this.speed_y > 24) {
-            this.speed_y = 24;
+        if (this.speed_y > 20) {
+            this.speed_y = 20;
         } else if (this.speed_y < -20) {
             this.speed_y = -20;
         }
