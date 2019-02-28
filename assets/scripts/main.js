@@ -11,8 +11,8 @@ var obstacle_0;
 var bird_down, bird_up; 
 
 function preload() {
-  bird_down = loadImage("./assets/images/bird_down_wings.png");
-  bird_up = loadImage("/assets/images/bird_up_wings.png");
+  bird_down = loadImage("../assets/images/bird_down_wings.png");
+  bird_up = loadImage("../assets/images/bird_up_wings.png");
 }
 
 function setup() {
