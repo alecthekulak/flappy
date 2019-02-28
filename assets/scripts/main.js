@@ -45,7 +45,8 @@ function setup() {
     }
   }
   // frameRate(60);
-  canvas.parent("page_body");
+  canvas.parent('p5Container');
+  // canvas.parent("page_body");
   start(); 
 }
   
