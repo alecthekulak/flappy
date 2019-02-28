@@ -3,6 +3,8 @@ let gravity = 0.5;
 let appWidth = 500; 
 let appHeight = 650; 
 let obstacleWidth = 60; 
+let gapHeight = 120; 
+var score_counter; 
 var manual = true; 
 var obstacle_0; 
 
@@ -15,12 +17,14 @@ function preload() {
 
 function setup() {
   let canvas = createCanvas(appWidth, windowHeight);
+  frameRate(60);
   canvas.parent("page_body");
-  player = new Player(); 
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
   }
-  obstacle_0 = new Obstacle(250);
+  start(); 
+  textSize(20);
+  textAlign(LEFT, CENTER); 
 }
   
 function draw() {
@@ -28,17 +32,35 @@ function draw() {
   // Ground 
   if (player.isDead()) {
     fill(255, 0, 0);
+    if (speed !== 0 && manual) {
+      pause();
+    }
   } else { 
     fill(153, 102, 51);
   }
   rect(0, appHeight, appWidth, windowHeight - appHeight);
   // Obstacles 
-  obstacle_0.update(player); 
-  obstacle_0.show(); 
+  obstacle_0.update_show(player);
+  // TEMP
+  fill(0);
+  text("Score: " + score_counter.toString(), 11, 18);
+  // text("player age:" + player.age.toString(), appWidth / 4, 250);
+  // text("player top:" + player.top().toString(), appWidth / 4, 250);
+  // text("player y:" + player.y.toString(), appWidth / 4, 300);
   // Player 
   player.update(); 
   player.show(); 
 
+}
+
+function start() {
+  player = new Player(); 
+  obstacle_0 = new Obstacle(2 * appHeight / 4);
+  obstacle_1 = new Obstacle();
+  if (speed == 0) {
+    pause(); 
+  }
+  score_counter = 0; 
 }
 
 function keyPressed() {
@@ -47,6 +69,15 @@ function keyPressed() {
       player.flap(); 
     }
   } else if (key == 'r' || key == 'R') {
-    player = new Player();
+    start(); 
+  } else if (key == 'p' || key == 'P') {
+    pause();
+  }
+}
+function pause() {
+  if (speed !== 0) {
+    speed = 0; 
+  } else {
+    speed = 1; 
   }
 }
