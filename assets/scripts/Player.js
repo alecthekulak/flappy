@@ -26,7 +26,7 @@ class Player{
             this.y = 0;
             this.speed_y = 0; 
         }
-        this.speed_y -= gravity * speed; 
+        this.speed_y -= gravity * speed;  
         this.age += 1 * speed;
         if (this.bottom() >= appHeight) {
             this.dead = true; 
