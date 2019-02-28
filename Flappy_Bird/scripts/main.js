@@ -1,11 +1,12 @@
 let speed = 1; 
 let gravity = 0.5; 
-let appWidth = 500;
+let appWidth = 500; 
 let appHeight = 650; 
+let obstacleWidth = 60; 
 var manual = true; 
+var obstacle_0; 
 
 var bird_down, bird_up; 
-var all_obstacles; 
 
 function preload() {
   bird_down = loadImage("images/bird_down_wings.png");
@@ -19,18 +20,23 @@ function setup() {
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
   }
-
+  obstacle_0 = new Obstacle(250);
 }
   
 function draw() {
   background("white");
+  // Ground 
   if (player.isDead()) {
     fill(255, 0, 0);
   } else { 
     fill(153, 102, 51);
   }
   rect(0, appHeight, appWidth, windowHeight - appHeight);
-  player.update();
+  // Obstacles 
+  obstacle_0.update(player); 
+  obstacle_0.show(); 
+  // Player 
+  player.update(); 
   player.show(); 
 
 }

@@ -9,7 +9,7 @@ class Player{
         this.height = 10; 
         this.flapping = 0; 
     }
-    update(obstacles) { 
+    update() { 
         if (this.speed_y > 40) {
             this.speed_y = 40;
         } else if (this.speed_y < -20) {
@@ -23,16 +23,14 @@ class Player{
         }
         this.speed_y -= gravity; 
         this.age++;
-        for(obstacle in obstacles){
-            if(obstacle.collide(this)){
-                this.dead = true; 
-            }
-        }
         if (this.y >= appHeight) {
             this.dead = true; 
         }
     }
-    isDead() {
+    isDead(yes = false) {
+        if (yes) {
+            this.dead = true; 
+        } 
         return this.dead; 
     }
     flap() {
