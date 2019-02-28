@@ -23,14 +23,16 @@ function setup() {
     appHeight = windowHeight - 15; 
   }
   start(); 
-  textSize(20);
-  textAlign(LEFT, CENTER); 
 }
   
 function draw() {
   background("white");
   // Ground 
   if (player.isDead()) {
+    fill(0);
+    textSize(70);
+    textAlign(CENTER, CENTER); 
+    text("YOU LOSE!", appWidth/2, appHeight/2);
     fill(255, 0, 0);
     if (speed !== 0 && manual) {
       pause();
@@ -41,9 +43,13 @@ function draw() {
   rect(0, appHeight, appWidth, windowHeight - appHeight);
   // Obstacles 
   obstacle_0.update_show(player);
-  // TEMP
+  // Score Counter
   fill(0);
+  textSize(20);
+  textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
+  // Maybe instructions on buttons to press over the Earth? 
+  // Temp
   // text("player age:" + player.age.toString(), appWidth / 4, 250);
   // text("player top:" + player.top().toString(), appWidth / 4, 250);
   // text("player y:" + player.y.toString(), appWidth / 4, 300);
@@ -61,6 +67,8 @@ function start() {
     pause(); 
   }
   score_counter = 0; 
+  textSize(20);
+  textAlign(LEFT, CENTER); 
 }
 
 function keyPressed() {
