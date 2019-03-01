@@ -15,7 +15,6 @@ class Player{
     }
     update() { 
         // Bound maximum speed between -20 and 24 //edit this?, top speed especially  
-        
         this.speed_y -= gravity * speed;  
         this.speed_y = constrain(this.speed_y, -20, 20);
         this.y -= this.speed_y * speed; 

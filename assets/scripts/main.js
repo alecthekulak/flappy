@@ -41,13 +41,13 @@ function setup() {
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
   }
-  // frameRate(60);
+  frameRate(60);
   canvas.parent('p5Container');
   past_deaths = 0; 
   noStroke();
   player = new Player(); 
-  bg_size = bg_section.width;
-  ground_size = ground_top.width * 1.5;
+  bg_size = bg_section.width * 1.5;
+  ground_size = ground_top.width * 2;
   start(); 
 }
   
