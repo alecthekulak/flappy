@@ -1,4 +1,4 @@
-let speed = 1; 
+let speed = 0.6; 
 let gravity = 1; 
 let jump_height = 14;
 let appWidth = 500; 
@@ -147,6 +147,12 @@ function keyPressed() {
     }
   } else if (key == 'p' || key == 'P') {
     pause();
+  } else if (key == 's' || key == 'S') {
+    if (speed = 1) {
+      speed = 0.6;
+    } else {
+      speed = 1;
+    }
   }
 }
 function pause() {
