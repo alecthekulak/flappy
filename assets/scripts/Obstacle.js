@@ -57,7 +57,7 @@ class Obstacle_Component{
         if (this.collide(player)) {
             player.isDead(true);
         }
-        this.x -= 2 * speed;
+        this.x -= obstacle_speed * speed;
     }
     show(){
         fill(75, 20);
@@ -68,8 +68,6 @@ class Obstacle_Component{
             } else {
                 image(obs_top_2, this.x, this.y - 1000 + this.height, obstacleWidth, 1000);
             }
-            // image(obs_top_1, this.x+60, this.y, obstacleWidth, this.height);
-            // }
         } else {
             rect(this.x, this.y, obstacleWidth, this.height);
             if (past_deaths % 2 == 0){
@@ -77,7 +75,6 @@ class Obstacle_Component{
             } else {
                 image(obs_bot_2, this.x, this.y, obstacleWidth, 1000);
             }
-            // image(obs_top_1, this.x, this.y);
         }
     }
 }

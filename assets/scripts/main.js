@@ -1,18 +1,20 @@
 let speed = 1; 
-let gravity = 0.5; 
+let gravity = 1; 
+let jump_height = 14;
 let appWidth = 500; 
 let appHeight = 650; 
-let obstacleWidth = 90; // 60
+let obstacleWidth = 90; 
 let gapHeight = 120; 
 let canvas;
 // 
-var score_counter, past_deaths, past_taps;
-var bg_size, ground_size; 
+var obstacle_speed, score_counter, past_deaths, past_taps, last_speed;
+var bg_size, ground_size, obstacle_2_trigger; 
 var i, j; 
 var manual = true; 
+var mortal = true; 
 // Variables 
 var obstacle_0, obstacle_1; 
-var bird_down, bird_up; 
+var bird_down, bird_up;  
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -61,6 +63,12 @@ function draw() {
   noTint();
   // Obstacles 
   obstacle_0.update_show(player);
+  if (player.age >= obstacle_1_trigger) {
+    obstacle_1.update_show(player);
+  } 
+  if (player.age % 800 == 799) { 
+    obstacle_speed *= 1.05; 
+  }
   // Ground 
   for (i = 0; i <= 2+~~(appWidth/ground_size); i++) { 
     image(ground_top, ground_size*i - (player.age*0.35 % ground_size), appHeight, ground_size, ground_size);
@@ -83,6 +91,8 @@ function draw() {
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
   text("Deaths: " + past_deaths.toString(), 11, 40);
+  // text("age: " + player.age.toString(), 11, 60);
+  // text("trigger: " + obstacle_1_trigger.toString(), 11, 80);
   // Player 
   player.update(); 
   player.show(); 
@@ -92,6 +102,7 @@ function start() {
   if (player.isDead()) {
     past_deaths++; 
   }  
+  obstacle_speed = 2; //1.75
   player = new Player(); 
   obstacle_0 = new Obstacle(2 * appHeight / 4);
   obstacle_1 = new Obstacle();
@@ -99,28 +110,13 @@ function start() {
     pause(); 
   }
   score_counter = 0; 
+  past_taps = 0;
   textSize(20);
   textAlign(LEFT, CENTER); 
-  past_taps = 0
+  obstacle_1_trigger = (appWidth + 2*obstacleWidth + ((appWidth - obstacleWidth) / 2)) / obstacle_speed; 
 }
-
 function touchStarted() {
-  if (0 < touchX && touchX <= appWidth &&
-      0 < touchY && touchY <= appHeight) {
-    if (manual && !player.isDead()) {
-      player.flap(); 
-    } else if (manual && player.isDead()) {
-      past_taps++; 
-      if (past_taps >= 3) {
-        start(); 
-      }
-    }
-  } else if (0 < touchX && touchX <= appWidth &&
-          appHeight <= touchY && touchY <= windowHeight) {
-    if (manual && player.isDead()) {
-      start(); 
-    }
-  }
+  mousePressed()
 }
 function mousePressed() {
   if (0 < mouseX && mouseX <= appWidth &&
@@ -146,7 +142,7 @@ function keyPressed() {
       player.flap(); 
     }
   } else if (key == 'r' || key == 'R') {
-    if (manual && player.isDead()) {
+    if (manual) { // && player.isDead()
       start(); 
     }
   } else if (key == 'p' || key == 'P') {
@@ -155,8 +151,9 @@ function keyPressed() {
 }
 function pause() {
   if (speed !== 0) {
+    last_speed = speed;
     speed = 0; 
   } else {
-    speed = 1; 
+    speed = last_speed; 
   }
 }

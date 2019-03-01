@@ -9,34 +9,36 @@ class Player{
         this.age = 0; 
         this.score = 0; 
         this.width = 32; 
-        this.height = 10; 
+        this.height = 32; 
         this.flapping = 0; 
+        this.angle = 0; 
     }
     update() { 
         // Bound maximum speed between -20 and 24 //edit this?, top speed especially  
-        if (this.speed_y > 20) {
-            this.speed_y = 20;
-        } else if (this.speed_y < -20) {
-            this.speed_y = -20;
-        }
-        this.y -= this.speed_y * speed; 
         
+        this.speed_y -= gravity * speed;  
+        this.speed_y = constrain(this.speed_y, -20, 20);
+        this.y -= this.speed_y * speed; 
+
         if (this.top() <= 0) {
-            // this.y = sprite_top_gap;
             this.y = 0;
             this.speed_y = 0; 
+        } else if (this.bottom() >= windowHeight) {
+            this.y = windowHeight - this.height;
+            this.speed_y = 0; 
         }
-        this.speed_y -= gravity * speed;  
-        this.age += 1 * speed;
+        this.age += speed;
         if (this.bottom() >= appHeight) {
-            this.dead = true; 
-            if (manual && speed !== 0) {
-                pause(); 
-            }
+            this.isDead(true);
+        }
+        if (this.speed_y > this.angle) { 
+            this.angle++; 
+        } else if (this.speed_y < this.angle) {
+            this.angle--;
         }
     }
     isDead(yes = false) {
-        if (yes) {
+        if (yes && mortal) {
             past_taps = 0; 
             this.dead = true; 
         } 
@@ -45,7 +47,7 @@ class Player{
     flap() {
         this.flapping = 9; 
         if (speed !== 0) {
-            this.speed_y += 13; 
+            this.speed_y += jump_height; 
         }
     }
     top() {
@@ -55,15 +57,18 @@ class Player{
         return this.top() + this.sprite_height; 
     }
     show() {
+        push(); 
+        imageMode(CENTER);
+        translate(this.x, this.y);
+        rotate(radians(-4.5*this.angle));
+        imageMode(CORNER)
         if (this.flapping > 0) {
-            image(bird_down, this.x, this.y);
-            this.flapping -= 1;  
-            // height: 16  up: 17
-            // 10/11 from top
-            // width: 32
+            image(bird_down, 0, 0);
+            this.flapping -= 1; 
         } else {
-            image(bird_up, this.x, this.y);
+            image(bird_up, 0, 0);
         }
+        pop(); 
 
     }
 }
