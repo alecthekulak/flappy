@@ -41,7 +41,7 @@ function setup() {
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
   }
-  // frameRate(60);
+  frameRate(60);
   canvas.parent('p5Container');
   past_deaths = 0; 
   noStroke();
