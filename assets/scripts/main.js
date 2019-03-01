@@ -91,7 +91,7 @@ function draw() {
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
   text("Deaths: " + past_deaths.toString(), 11, 40);
-  // text("age: " + player.age.toString(), 11, 60);
+  // text("speed: " + speed.toString(), 11, 60);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 80);
   // Player 
   player.update(); 
@@ -148,7 +148,7 @@ function keyPressed() {
   } else if (key == 'p' || key == 'P') {
     pause();
   } else if (key == 's' || key == 'S') {
-    if (speed = 1) {
+    if (speed == 1) {
       speed = 0.6;
     } else {
       speed = 1;
