@@ -23,11 +23,12 @@ class Player{
             this.y = 0;
             this.speed_y = 0; 
         } else if (this.bottom() >= windowHeight) {
+            this.isDead(true);
             this.y = windowHeight - this.height;
             this.speed_y = 0; 
         }
         this.age += speed;
-        if (this.bottom() >= appHeight || this.bottom() >= windowHeight) {
+        if (this.bottom() >= appHeight) {
             this.isDead(true);
         }
         if (this.speed_y > this.angle) { 
