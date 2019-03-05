@@ -33,7 +33,7 @@ function setup() { // Make a title screen
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
   } 
-  if (windowWidth < appWidth * 2) {
+  if (windowWidth <= appWidth * 2.3) {
     var right_textbox = select("#right-section"); 
     right_textbox.hide();
   }
@@ -88,7 +88,7 @@ function draw() {
   text("Score: " + score_counter.toString(), 11, 18);
   text("High Score: " + high_score.toString(), 11, 40);
   text("Deaths: " + past_deaths.toString(), 11, 62);
-  text("age: " + player.age.toString(), 11, 84);
+  // text("age: " + player.age.toString(), 11, 84);
   // text("speed: " + speed.toString(), 11, 60);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 80);
   // Player 

@@ -16,30 +16,27 @@ class Player{
     update() { 
         // If dead, move along with obstacles 
         if (this.isDead()) {
-            this.x -= obstacle_speed * speed;
-            this.y = constrain(this.y, 0, windowHeight-this.height);
+            this.x -= obstacle_speed * speed * 1.5;
+            this.y = constrain(this.y, this.sprite_top_gap-50*this.dead, windowHeight-this.height);
         }
         // Bound maximum speed between -20 and 24 //edit this?, top speed especially  
         this.speed_y -= gravity * speed;  
         this.speed_y = constrain(this.speed_y, -20, 20);
         this.y -= this.speed_y * speed; 
-
-        if (this.top() <= 0) {
+        // Constrain between top and bottom of area
+        if (!this.dead && this.top() <= 0) {
             this.y = 0;
             this.speed_y = 0; 
-        } else if (this.bottom() >= windowHeight) {
-            this.isDead(true);
-            this.y = windowHeight - this.height;
+        } else if (this.bottom() >= appHeight) {
+            this.y = appHeight - this.height;
             this.speed_y = 0; 
+            this.isDead(true);
         }
+        // Increment age and angle 
         this.age += speed * !this.dead;
-        if (this.bottom() > appHeight) {
-            this.isDead(true);
-            this.speed_y = 0; 
-        }
-        if (!this.isDead() && this.speed_y > this.angle) { 
+        if (!this.dead && this.speed_y > this.angle) { 
             this.angle += 1; 
-        } else if (!this.isDead() && this.speed_y < this.angle) {
+        } else if (!this.dead && this.speed_y < this.angle) {
             this.angle -= 1;
         }
     }
