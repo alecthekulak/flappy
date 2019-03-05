@@ -14,6 +14,11 @@ class Player{
         this.angle = 0; 
     }
     update() { 
+        // If dead, move along with obstacles 
+        if (this.isDead()) {
+            this.x -= obstacle_speed * speed;
+            this.y = constrain(this.y, 0, windowHeight-this.height);
+        }
         // Bound maximum speed between -20 and 24 //edit this?, top speed especially  
         this.speed_y -= gravity * speed;  
         this.speed_y = constrain(this.speed_y, -20, 20);
@@ -27,20 +32,23 @@ class Player{
             this.y = windowHeight - this.height;
             this.speed_y = 0; 
         }
-        this.age += speed;
+        this.age += speed * !this.dead;
         if (this.bottom() > appHeight) {
             this.isDead(true);
+            this.speed_y = 0; 
         }
-        if (this.speed_y > this.angle) { 
+        if (!this.isDead() && this.speed_y > this.angle) { 
             this.angle += 1; 
-        } else if (this.speed_y < this.angle) {
+        } else if (!this.isDead() && this.speed_y < this.angle) {
             this.angle -= 1;
         }
     }
     isDead(yes = false) {
-        if (yes && mortal) {
+        if (yes && mortal && !this.dead) {
             past_taps = 0; 
             this.dead = true; 
+            this.speed_y += 10;
+            this.angle += 20; 
         } 
         return this.dead; 
     }
@@ -60,7 +68,8 @@ class Player{
         push(); 
         imageMode(CENTER);
         translate(this.x, this.y);
-        rotate(radians(-2.5*this.angle)); //4.5 //choppy at slower speeds 
+        rotate(radians(-2.5*this.angle));
+        // rotate(radians(-2.5*this.angle)); //4.5 //choppy at slower speeds 
         imageMode(CORNER)
         if (this.flapping > 0) {
             image(bird_down, 0, 0);

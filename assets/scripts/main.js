@@ -1,22 +1,20 @@
 let speed = 0.6; 
-let gravity = 0.4;
-let jump_height = 10;
-// let jump_height = 14;
-// let gravity = 1; 
+let gravity = 0.4; // 1
+let jump_height = 10; // 14
 let appWidth = 500; 
 let appHeight = 650; 
 let obstacleWidth = 90; 
 let gapHeight = 120; 
-let canvas;
-// 
+// Counters, logs, etc
 var obstacle_speed, score_counter, past_deaths, past_taps, last_speed, high_score;
 var bg_size, ground_size, obstacle_2_trigger; 
 var i, j; 
 var manual = true; 
 var mortal = true; 
 // Variables 
-var obstacle_0, obstacle_1; 
-var bird_down, bird_up;  
+let canvas, player, obstacle_0, obstacle_1; 
+// AI Run 
+var population; 
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -30,7 +28,7 @@ function preload() {
   ground_bot = loadImage("assets/images/ground_bot.png");
 }
 
-function setup() {
+function setup() { // Make a title screen
   canvas = createCanvas(appWidth, windowHeight);
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
@@ -90,6 +88,7 @@ function draw() {
   text("Score: " + score_counter.toString(), 11, 18);
   text("High Score: " + high_score.toString(), 11, 40);
   text("Deaths: " + past_deaths.toString(), 11, 62);
+  text("age: " + player.age.toString(), 11, 84);
   // text("speed: " + speed.toString(), 11, 60);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 80);
   // Player 
@@ -101,7 +100,7 @@ function start() {
   if (player.isDead()) {
     past_deaths++; 
   }  
-  obstacle_speed = 2; //1.75
+  obstacle_speed = 3; //2 //1.75
   player = new Player(); 
   obstacle_0 = new Obstacle(2 * appHeight / 4);
   obstacle_1 = new Obstacle();
@@ -157,7 +156,7 @@ function keyPressed() {
 function pause() {
   if (speed !== 0) {
     last_speed = speed;
-    speed = 0; 
+    speed = 1; 
   } else {
     speed = last_speed; 
   }
