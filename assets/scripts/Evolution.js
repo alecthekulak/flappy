@@ -1,27 +1,83 @@
 class Population{ 
     constructor(size) {
+        this.size = size; 
         this.members = [];
         this.networks = [];  
-        this.top_member; 
+        this.top_member = false; 
+        this.top_network = false; 
         this.top_score = 0; 
         this.generation = 0; 
+        this.dead = false; 
+        this.age = 0; 
         
         for (i = 0; i < size; i++) {
             this.members.push(new Player()); 
             this.networks.push(new Network(4, 1)); 
         }
     }
-    update() {
+    restart() {
+        this.age = 0; 
+        this.dead = false; 
+        this.generation++; 
 
+        this.members = [];
+        this.networks = []; 
+        if (typeof(this.top_network) !== "boolean") {
+            this.members.push(new Player()); 
+            this.networks.push(new Network(4, 1, this.top_network.clone())); 
+            for (i = 0; i < size; i++) {
+                this.members.push(new Player()); 
+                this.networks.push(new Network(4, 1, this.top_network.clone(true))); 
+            }
+        } else {
+            for (i = 0; i < size; i++) {
+                this.members.push(new Player()); 
+                this.networks.push(new Network(4, 1)); 
+            }
+        }
+
+
+
+
+    }
+    update(obstacles) {
+        this.dead = true; 
+        for (i=0; i<this.size; i++) {
+            if (!this.members[i].dead) {
+                this.dead = false; 
+                if (this.members[i].age > this.age) {
+                    this.age = this.members[i].age; 
+                    this.top_member = this.members[i]; 
+                    this.top_network = this.networks[i]; 
+                    if (this.members[i].score > this.top_score) {
+                        this.top_score = this.members[i].score; 
+                    }
+                }
+                observations = this.members[i].observeEnvironment(obstacles); 
+                network_output = this.networks[i].getOutput(observations); 
+                if (network_output == 1) {
+                    this.members[i].flap(); 
+                }
+            }
+            this.members[i].update();
+        }
+    }
+    show() {
+        for (i=0; i<this.size; i++) {
+            this.members[i].show();
+        }
     }
 }
 class Network{
-    constructor(n_inputs, n_outputs) {
+    constructor(n_inputs, n_outputs, weights = false) {
         this.n_inputs = n_inputs;
         this.n_outputs = n_outputs; 
-        this.weights = []; 
-        for (i=0; i<(n_inputs*n_outputs); i++) {
-            this.weights.push(random());
+        if (typeof(weights) == 'boolean') {
+            this.weights = []; 
+            for (i=0; i<(n_inputs*n_outputs); i++) {
+                this.weights.push(2*random()-1);
+            }
+
         }
     }
     transform(inputs) {
@@ -34,6 +90,10 @@ class Network{
             this.outputs.append(this.sigmoid(temp));
         }
         return this.outputs; 
+    }
+    getOutput(inputs) {
+        outputs = this.transform(inputs);
+        return this.step(outputs[0]);
     }
     sigmoid(x) {
         return 1.0 / (1.0 + pow(Math.E, x))
@@ -50,9 +110,12 @@ class Network{
             for (weight in weights) {
                 mutated_weights.append(randomGaussian(weight, mutation_amount));
             }
-            return mutated_weights;
+            new_weights = mutated_weights;
+        } else {
+            new_weights = this.weights;
         }
-        return this.weights;
+        new_network = new Network(this.n_inputs, this.n_outputs, new_weights); 
+        return new_network;
     }
 }
 Math.randomGaussian = function(mean = 0.0, standardDeviation = 1.0) {

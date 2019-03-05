@@ -6,6 +6,7 @@ class Obstacle{
         if (gap <= 0 || gap > appHeight) {
             gap = floor(random(gapHeight, appHeight - gapHeight));
         }
+        this.gap = gap; 
         this.top = new Obstacle_Component(gap, true);
         this.bot = new Obstacle_Component(gap, false);
 
@@ -18,6 +19,12 @@ class Obstacle{
     }
     onScreen(){
         return (this.top.x + obstacleWidth) > 0; 
+    }
+    left() {
+        return this.top.x; 
+    }
+    right() {
+        return this.top.x + obstacleWidth; 
     }
     update_show(players){
         if (!this.onScreen()) {

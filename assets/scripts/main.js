@@ -96,7 +96,7 @@ function draw() {
   text("High Score: " + high_score.toString(), 11, 40);
   text("Deaths: " + past_deaths.toString(), 11, 62);
   // text("age: " + player.age.toString(), 11, 84);
-  text("speed: " + randomGaussian().toString(), 11, 84);
+  // text("speed: " + randomGaussian().toString(), 11, 84);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 84 );
   // Player 
   if (manual) {

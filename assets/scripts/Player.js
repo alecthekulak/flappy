@@ -65,8 +65,7 @@ class Player{
         push(); 
         imageMode(CENTER);
         translate(this.x, this.y);
-        rotate(radians(-2.5*this.angle));
-        // rotate(radians(-2.5*this.angle)); //4.5 //choppy at slower speeds 
+        rotate(radians(-2.5*this.angle)); //4.5 //choppy at slower speeds 
         imageMode(CORNER)
         if (this.flapping > 0) {
             image(bird_down, 0, 0);
@@ -75,6 +74,23 @@ class Player{
             image(bird_up, 0, 0);
         }
         pop(); 
-
+    }
+    // For AI: 
+    observeEnvironment(obstacles) {
+        observed_variables = []; 
+        observed_variables[0] = this.speed_y; // Verticle speed 
+        observed_variables[1] = this.y; // Verticle height 
+        var nearest_obstacle = obstacles[0];
+        var nearest_obstacle_distance = appWidth; 
+        for (obstacle in obstacles) {
+            if (obstacle.right() >= this.x && obstacle.left() > 0 && 
+                obstacle.left() <= nearest_obstacle_distance) {
+                nearest_obstacle = obstacle; 
+                nearest_obstacle_distance = obstacle.left(); 
+            }
+        }
+        observed_variables[2] = nearest_obstacle_distance; // Distance to nearest obstacle 
+        observed_variables[3] = nearest_obstacle.gap; // Gap height for nearest obstacle 
+        return observed_variables; 
     }
 }
