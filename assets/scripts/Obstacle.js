@@ -19,16 +19,21 @@ class Obstacle{
     onScreen(){
         return (this.top.x + obstacleWidth) > 0; 
     }
-    update_show(player){
+    update_show(players){
         if (!this.onScreen()) {
-            this.generate_obstacles(-player.age);
+            if (manual) {
+                player_age = players[0].age; 
+            } else {
+                // player_age = generation.age; 
+            }
+            this.generate_obstacles(-player_age);
             score_counter++; 
             if (score_counter > high_score) {
                 high_score = score_counter; 
             }
         }
-        this.top.update(player);
-        this.bot.update(player);
+        this.top.update(players);
+        this.bot.update(players);
         this.top.show(); 
         this.bot.show(); 
     }
@@ -63,18 +68,20 @@ class Obstacle_Component{
     //         }
     //     }
     // }
+    update(players){ 
+        for (var player in players) {
+            if (this.collide(player)) {
+                player.isDead(true);
+            }
+        }
+        this.x -= obstacle_speed * speed;
+    }
     // update(player){ 
     //     if (this.collide(player)) {
     //         player.isDead(true);
     //     }
     //     this.x -= obstacle_speed * speed;
     // }
-    update(player){ 
-        if (this.collide(player)) {
-            player.isDead(true);
-        }
-        this.x -= obstacle_speed * speed;
-    }
     show(){
         fill(75, 20);
         if (this.top == true) {

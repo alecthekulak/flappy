@@ -9,12 +9,13 @@ let gapHeight = 120;
 var obstacle_speed, score_counter, past_deaths, past_taps, last_speed, high_score;
 var bg_size, ground_size, obstacle_2_trigger; 
 var i, j; 
-var manual = true; 
 var mortal = true; 
-// Variables 
-let canvas, player, obstacle_0, obstacle_1; 
+// Variables  //the_player
+let canvas, players, obstacle_0, obstacle_1, generation; 
 // AI Run 
+var manual = true; 
 var population; 
+var mutation_amount = 0.5; 
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -41,40 +42,46 @@ function setup() { // Make a title screen
   canvas.parent('p5Container');
   past_deaths = high_score = 0; 
   noStroke();
-  player = new Player(); 
+  // the_player = new Player(); 
+  players = [new Player()]; 
   bg_size = bg_section.width * 1.5;
   ground_size = ground_top.width * 2;
   start(); 
 }
   
 function draw() {
+  if (manual) {
+    player_age = players[0].age; 
+  } else {
+    // player_age = generation.age; 
+  }
   // Sky
   background("white");
   tint(255, 100); 
   for (i = 0; i <= 2+~~(appWidth/bg_size); i++) { 
     for (j = 0; j <= ~~(appHeight/bg_size); j++) {
-      image(bg_section, bg_size*i - (player.age % bg_size), bg_size*j, bg_size, bg_size);
+      image(bg_section, bg_size*i - (player_age % bg_size), bg_size*j, bg_size, bg_size);
     }
   }
   noTint();
   // Obstacles 
-  obstacle_0.update_show(player);
-  if (player.age >= obstacle_1_trigger) {
-    obstacle_1.update_show(player);
+  obstacle_0.update_show(players);
+  if (player_age >= obstacle_1_trigger) {
+    obstacle_1.update_show(players);
   } 
-  if (player.age % 800 == 799) { 
+  if (player_age % 800 == 799) { 
     obstacle_speed *= 1.05; 
   }
   // Ground 
   for (i = 0; i <= 2+~~(appWidth/ground_size); i++) { 
-    image(ground_top, ground_size*i - (player.age*0.35 % ground_size), appHeight, ground_size, ground_size);
+    image(ground_top, ground_size*i - (player_age*0.35 % ground_size), appHeight, ground_size, ground_size);
     for (j = 1; j <= 2+~~(appHeight/ground_size); j++) {
-      image(ground_bot, ground_size*i - (player.age*0.35 % ground_size), appHeight + ground_size*j, ground_size, ground_size);
+      image(ground_bot, ground_size*i - (player_age*0.35 % ground_size), appHeight + ground_size*j, ground_size, ground_size);
     }
   }
   // Is dead? 
   fill(0);
-  if (player.isDead()) {
+  if (manual && players[0].isDead()) {
     textSize(70 + past_deaths*2);
     textAlign(CENTER, CENTER); 
     text("YOU LOSE!", appWidth/2, appHeight/2);
@@ -89,19 +96,31 @@ function draw() {
   text("High Score: " + high_score.toString(), 11, 40);
   text("Deaths: " + past_deaths.toString(), 11, 62);
   // text("age: " + player.age.toString(), 11, 84);
-  // text("speed: " + speed.toString(), 11, 60);
-  // text("trigger: " + obstacle_1_trigger.toString(), 11, 80);
+  text("speed: " + randomGaussian().toString(), 11, 84);
+  // text("trigger: " + obstacle_1_trigger.toString(), 11, 84 );
   // Player 
-  player.update(); 
-  player.show(); 
+  if (manual) {
+    players[0].update(); 
+    players[0].show(); 
+  } else {
+    for (var player in players) {
+      player.update();
+      player.show();
+    }
+
+  }
 }
 
 function start() {
-  if (player.isDead()) {
+  if (manual && players[0].isDead()) {
     past_deaths++; 
-  }  
+  } 
+  // else if (generation.isDead()) {
+  //   past_deaths++; 
+  // }
   obstacle_speed = 3; //2 //1.75
-  player = new Player(); 
+  // the_player = new Player(); 
+  players = [new Player()];
   obstacle_0 = new Obstacle(2 * appHeight / 4);
   obstacle_1 = new Obstacle();
   if (speed == 0) {
@@ -119,9 +138,9 @@ function touchStarted() {
 function mousePressed() {
   if (0 < mouseX && mouseX <= appWidth &&
       0 < mouseY && mouseY <= windowHeight) { //appHeight
-    if (manual && !player.isDead()) {
-      player.flap(); 
-    } else if (manual && player.isDead()) {
+    if (manual && !players[0].isDead()) {
+      players[0].flap(); 
+    } else if (manual && players[0].isDead()) {
       past_taps++; 
       if (past_taps >= 3) {
         start(); 
@@ -129,18 +148,18 @@ function mousePressed() {
     }
   } else if (0 < mouseX && mouseX <= appWidth &&
           appHeight <= mouseY && mouseY <= windowHeight) {
-    if (manual && player.isDead()) {
+    if (manual && players[0].isDead()) {
       start(); 
     }
   }
 }
 function keyPressed() {
   if (key == ' ') {
-    if (manual && !player.isDead()) {
-      player.flap(); 
+    if (manual && !players[0].isDead()) {
+      players[0].flap(); 
     }
   } else if (key == 'r' || key == 'R') {
-    if (manual) { // && player.isDead()
+    if (manual) { 
       start(); 
     }
   } else if (key == 'p' || key == 'P') {
