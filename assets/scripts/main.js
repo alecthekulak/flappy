@@ -11,7 +11,7 @@ var bg_size, ground_size, obstacle_2_trigger;
 var i, j; 
 var mortal = true; 
 // Variables  //the_player
-let canvas, players, obstacle_0, obstacle_1, generation; 
+let canvas, players, obstacles, generation; 
 // AI Run 
 var manual = true; 
 var population; 
@@ -65,9 +65,9 @@ function draw() {
   }
   noTint();
   // Obstacles 
-  obstacle_0.update_show(players);
+  obstacles[0].update_show(players);
   if (player_age >= obstacle_1_trigger) {
-    obstacle_1.update_show(players);
+    obstacle[1].update_show(players);
   } 
   if (player_age % 800 == 799) { 
     obstacle_speed *= 1.05; 
@@ -99,16 +99,21 @@ function draw() {
   // text("speed: " + randomGaussian().toString(), 11, 84);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 84 );
   // Player 
-  if (manual) {
-    players[0].update(); 
-    players[0].show(); 
-  } else {
-    for (var player in players) {
-      player.update();
-      player.show();
-    }
+  for (i=0; i<players.length; i++) {
+    players[i].update(obstacles);
+    players[i].show();
 
   }
+  // if (manual) {
+  //   players[0].update(); 
+  //   players[0].show(); 
+  // } else {
+  //   for (var player in players) {
+  //     player.update();
+  //     player.show();
+  //   }
+
+  // }
 }
 
 function start() {
@@ -121,8 +126,9 @@ function start() {
   obstacle_speed = 3; //2 //1.75
   // the_player = new Player(); 
   players = [new Player()];
-  obstacle_0 = new Obstacle(2 * appHeight / 4);
-  obstacle_1 = new Obstacle();
+  obstacles = [new Obstacle(2 * appHeight / 4), new Obstacle()]
+  // obstacle_0 = new Obstacle(2 * appHeight / 4);
+  // obstacle_1 = new Obstacle();
   if (speed == 0) {
     pause(); 
   }
@@ -139,7 +145,10 @@ function mousePressed() {
   if (0 < mouseX && mouseX <= appWidth &&
       0 < mouseY && mouseY <= windowHeight) { //appHeight
     if (manual && !players[0].isDead()) {
-      players[0].flap(); 
+      for (i=0; i<players.length; i++) {
+        players[i].flap(); 
+      }
+      // players[0].flap(); 
     } else if (manual && players[0].isDead()) {
       past_taps++; 
       if (past_taps >= 3) {
@@ -156,7 +165,9 @@ function mousePressed() {
 function keyPressed() {
   if (key == ' ') {
     if (manual && !players[0].isDead()) {
-      players[0].flap(); 
+      for (i=0; i<players.length; i++) {
+        players[i].flap(); 
+      }
     }
   } else if (key == 'r' || key == 'R') {
     if (manual) { 

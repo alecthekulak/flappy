@@ -13,7 +13,7 @@ class Player{
         this.flapping = 0; 
         this.angle = 0; 
     }
-    update() { 
+    update(_) { 
         // If dead, move along with obstacles 
         if (this.isDead()) {
             this.x -= obstacle_speed * speed * 1.5;

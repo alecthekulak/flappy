@@ -68,17 +68,10 @@ class Obstacle_Component{
         }
         return false;
     }
-    // update_all(players) {
-    //     for (player in players) {
-    //         if (this.collide(player)) {
-
-    //         }
-    //     }
-    // }
     update(players){ 
-        for (var player in players) {
-            if (this.collide(player)) {
-                player.isDead(true);
+        for (i=0; i<players.length; i++) {
+            if (this.collide(players[i])) {
+                players[i].isDead(true);
             }
         }
         this.x -= obstacle_speed * speed;
