@@ -1,13 +1,15 @@
 let speed = 0.6; 
-let gravity = 1; 
-let jump_height = 14;
+let gravity = 0.4;
+let jump_height = 10;
+// let jump_height = 14;
+// let gravity = 1; 
 let appWidth = 500; 
 let appHeight = 650; 
 let obstacleWidth = 90; 
 let gapHeight = 120; 
 let canvas;
 // 
-var obstacle_speed, score_counter, past_deaths, past_taps, last_speed;
+var obstacle_speed, score_counter, past_deaths, past_taps, last_speed, high_score;
 var bg_size, ground_size, obstacle_2_trigger; 
 var i, j; 
 var manual = true; 
@@ -26,24 +28,20 @@ function preload() {
   bg_section = loadImage("assets/images/bg_section.png");
   ground_top = loadImage("assets/images/ground_top.png");
   ground_bot = loadImage("assets/images/ground_bot.png");
-  // bird_down = loadImage("../assets/images/bird_down_wings.png"); // no
-  // bird_down = loadImage("./assets/images/bird_down_wings.png"); 
-  // bird_down = loadImage("/assets/images/bird_down_wings.png");
-  // bird_down = loadImage("assets/images/bird_down_wings.png"); //works? 
-  // bird_down = loadImage("../images/bird_down_wings.png");
-  // bird_down = loadImage("./images/bird_down_wings.png");
-  // bird_down = loadImage("/images/bird_down_wings.png");
-  // bird_down = loadImage("images/bird_down_wings.png");
 }
 
 function setup() {
   canvas = createCanvas(appWidth, windowHeight);
   if (windowHeight < appHeight) {
     appHeight = windowHeight - 15; 
+  } 
+  if (windowWidth < appWidth * 2) {
+    var right_textbox = select("#right-section"); 
+    right_textbox.hide();
   }
   frameRate(60);
   canvas.parent('p5Container');
-  past_deaths = 0; 
+  past_deaths = high_score = 0; 
   noStroke();
   player = new Player(); 
   bg_size = bg_section.width * 1.5;
@@ -90,7 +88,8 @@ function draw() {
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("Score: " + score_counter.toString(), 11, 18);
-  text("Deaths: " + past_deaths.toString(), 11, 40);
+  text("High Score: " + high_score.toString(), 11, 40);
+  text("Deaths: " + past_deaths.toString(), 11, 62);
   // text("speed: " + speed.toString(), 11, 60);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 80);
   // Player 
@@ -120,7 +119,7 @@ function touchStarted() {
 }
 function mousePressed() {
   if (0 < mouseX && mouseX <= appWidth &&
-      0 < mouseY && mouseY <= appHeight) {
+      0 < mouseY && mouseY <= windowHeight) { //appHeight
     if (manual && !player.isDead()) {
       player.flap(); 
     } else if (manual && player.isDead()) {

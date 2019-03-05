@@ -23,6 +23,9 @@ class Obstacle{
         if (!this.onScreen()) {
             this.generate_obstacles(-player.age);
             score_counter++; 
+            if (score_counter > high_score) {
+                high_score = score_counter; 
+            }
         }
         this.top.update(player);
         this.bot.update(player);
@@ -45,10 +48,10 @@ class Obstacle_Component{
         }
     }
     collide(player){
-        if (player.x + player.width >= this.x && 
-            player.x <= this.x + obstacleWidth && 
-            player.bottom() >= this.y && 
-            player.top() <= this.y + this.height){
+        if (player.x + player.width > this.x && 
+            player.x < this.x + obstacleWidth && 
+            player.bottom() > this.y && 
+            player.top() < this.y + this.height){
             return true;
         }
         return false;

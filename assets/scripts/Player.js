@@ -28,13 +28,13 @@ class Player{
             this.speed_y = 0; 
         }
         this.age += speed;
-        if (this.bottom() >= appHeight) {
+        if (this.bottom() > appHeight) {
             this.isDead(true);
         }
         if (this.speed_y > this.angle) { 
-            this.angle++; 
+            this.angle += 1; 
         } else if (this.speed_y < this.angle) {
-            this.angle--;
+            this.angle -= 1;
         }
     }
     isDead(yes = false) {
@@ -60,7 +60,7 @@ class Player{
         push(); 
         imageMode(CENTER);
         translate(this.x, this.y);
-        rotate(radians(-4.5*this.angle));
+        rotate(radians(-2.5*this.angle)); //4.5 //choppy at slower speeds 
         imageMode(CORNER)
         if (this.flapping > 0) {
             image(bird_down, 0, 0);
