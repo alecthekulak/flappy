@@ -56,6 +56,19 @@ class Obstacle_Component{
         }
         return false;
     }
+    // update_all(players) {
+    //     for (player in players) {
+    //         if (this.collide(player)) {
+
+    //         }
+    //     }
+    // }
+    // update(player){ 
+    //     if (this.collide(player)) {
+    //         player.isDead(true);
+    //     }
+    //     this.x -= obstacle_speed * speed;
+    // }
     update(player){ 
         if (this.collide(player)) {
             player.isDead(true);
