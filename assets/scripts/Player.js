@@ -1,10 +1,11 @@
+var observed_variables;
 class Player{ 
     sprite_top_gap = 11; 
     sprite_height = 15; 
     constructor() {
         this.x = appWidth / 5;
         this.y = appHeight / 2;
-        this.speed_y = 0;
+        this.speed_y = 1;
         this.dead = false;
         this.age = 0; 
         this.score = 0; 
@@ -82,11 +83,11 @@ class Player{
         observed_variables[1] = this.y; // Verticle height 
         var nearest_obstacle = obstacles[0];
         var nearest_obstacle_distance = appWidth; 
-        for (obstacle in obstacles) {
-            if (obstacle.right() >= this.x && obstacle.left() > 0 && 
-                obstacle.left() <= nearest_obstacle_distance) {
-                nearest_obstacle = obstacle; 
-                nearest_obstacle_distance = obstacle.left(); 
+        for (var j; j<obstacles.length; j++){
+            if (obstacles[j].right() >= this.x && obstacles[j].left() > 0 && 
+            obstacles[j].left() <= nearest_obstacle_distance) {
+                nearest_obstacle = obstacles[j]; 
+                nearest_obstacle_distance = obstacles[j].left(); 
             }
         }
         observed_variables[2] = nearest_obstacle_distance; // Distance to nearest obstacle 

@@ -31,7 +31,7 @@ class Obstacle{
             if (manual) {
                 player_age = players[0].age; 
             } else {
-                // player_age = generation.age; 
+                player_age = generation.age; 
             }
             this.generate_obstacles(-player_age);
             score_counter++; 
