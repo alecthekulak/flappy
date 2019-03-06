@@ -18,6 +18,7 @@ class Population{
             this.members.push(new Player()); 
             this.networks.push(new Network(4, 1)); 
         }
+        this.top_network = this.networks[0].deepCopy(); 
     }
     nextGeneration() {
         console.log("best info:"); 
@@ -36,9 +37,13 @@ class Population{
             // this.networks.push(new Network(4, 1, this.top_network.clone())); 
             for (i = 0; i < this.size; i++) {
                 this.members.push(new Player()); 
-                this.networks.push(new Network(4, 1, this.top_network.clone(true, i*mutation_amount/this.gen_num))); 
                 if (i==0) {
+                    this.networks.push(new Network(4, 1, this.top_network.clone(false)));  //(this.gen_num*.05 +1))
                     console.log("weights new: "+this.networks[i].weights.toString());
+                    console.log("clone res: "+this.top_network.clone(false).toString());
+                } else {
+                    
+                    this.networks.push(new Network(4, 1, this.top_network.clone(true, sqrt(i)*mutation_amount*pow(this.gen_num, -0.15))));
                 }
             }
         } else {

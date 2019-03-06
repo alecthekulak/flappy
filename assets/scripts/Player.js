@@ -66,7 +66,7 @@ class Player{
         push(); 
         imageMode(CENTER);
         translate(this.x, this.y);
-        rotate(radians(-2.5*this.angle)); //4.5 //choppy at slower speeds 
+        rotate(radians(-2.5*this.angle*speed)); //4.5 //choppy at slower speeds 
         imageMode(CORNER)
         if (this.flapping > 0) {
             image(bird_down, 0, 0);

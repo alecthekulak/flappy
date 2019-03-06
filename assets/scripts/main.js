@@ -47,7 +47,7 @@ function setup() { // Make a title screen
   if (manual) {
     players = [new Player()]; 
   } else {
-    generation = new Population(50); 
+    generation = new Population(100); 
     players = generation.members; 
   }
 
@@ -215,10 +215,10 @@ function keyPressed() {
   } else if (!manual && (key == 'k' || key == 'K')) {
     generation.dead = true;
   } else if (key == 's' || key == 'S') {
-    if (speed == 1) {
-      speed = 0.6;
+    if (speed == 0.6) { //1
+      speed = 1.2;
     } else {
-      speed = 1;
+      speed = 0.6;
     }
   }
 }
