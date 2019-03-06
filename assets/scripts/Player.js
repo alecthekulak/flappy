@@ -94,4 +94,14 @@ class Player{
         observed_variables[3] = nearest_obstacle.gap; // Gap height for nearest obstacle 
         return observed_variables; 
     }
+    reset() {
+        this.x = appWidth / 5;
+        this.y = appHeight / 2;
+        this.speed_y = 1;
+        this.dead = false;
+        this.age = 0; 
+        this.score = 0; 
+        this.flapping = 0; 
+        this.angle = 0; 
+    }
 }

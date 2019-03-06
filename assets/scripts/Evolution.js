@@ -29,21 +29,24 @@ class Population{
         this.dead = false; 
         this.gen_num++; 
 
-        this.members = [];
+        // this.members = [];
         this.networks = []; 
         console.log("weights: "+this.top_network.weights.toString());
         if (typeof(this.top_network) !== "boolean") { 
             // this.members.push(new Player()); 
             // this.networks.push(new Network(4, 1, this.top_network.clone())); 
-            for (i = 0; i < this.size; i++) {
-                this.members.push(new Player()); 
-                if (i==0) {
-                    this.networks.push(new Network(4, 1, this.top_network.clone(false)));  //(this.gen_num*.05 +1))
-                    console.log("weights new: "+this.networks[i].weights.toString());
-                    console.log("clone res: "+this.top_network.clone(false).toString());
+            // this.members.push(new Player()); 
+            this.members[0].reset(); 
+            this.networks.push(new Network(4, 1, this.top_network.clone(false))); 
+            console.log("weights new: "+this.networks[0].weights.toString());
+            console.log("clone res: "+this.top_network.clone(false).toString());
+            for (i = 1; i < this.size - 10; i++) {
+                // this.members.push(new Player()); 
+                this.members[i].reset(); 
+                if (i < this.size - 10) {
+                    this.networks.push(new Network(4, 1, this.top_network.clone(true, mutation_amount*pow(this.gen_num, -0.3))));
                 } else {
-                    
-                    this.networks.push(new Network(4, 1, this.top_network.clone(true, sqrt(i)*mutation_amount*pow(this.gen_num, -0.15))));
+                    this.networks.push(new Network(4, 1));
                 }
             }
         } else {
@@ -52,7 +55,6 @@ class Population{
                 this.networks.push(new Network(4, 1)); 
             }
         }
-        // return this; 
     }
     update(obstacles) {
         this.dead = true; 

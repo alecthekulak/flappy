@@ -7,15 +7,15 @@ let obstacleWidth = 90;
 let gapHeight = 120; 
 // Counters, logs, etc
 var obstacle_speed, score_counter, past_deaths, past_taps, last_speed, high_score, frames;
-var bg_size, ground_size, obstacle_1_trigger; 
+var bg_size, ground_size, obstacle_1_trigger, all_dead; 
 var i, j, temp; 
 var mortal = true; 
 // Variables 
 let canvas, players, obstacles, generation; 
 // AI Run 
 var manual = false; 
-// var manual = true; 
-var mutation_amount = 0.5; 
+var mutation_amount = 0.8; 
+// var mutation_amount = 0.5; 
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -42,8 +42,6 @@ function setup() { // Make a title screen
   canvas.parent('p5Container');
   past_deaths = high_score = 0; 
   noStroke();
-  // generation = new Population(10); 
-  // // players = generation.members; 
   if (manual) {
     players = [new Player()]; 
   } else {
@@ -74,6 +72,12 @@ function draw() {
   }
   noTint();
   // Obstacles 
+  // if (obstacles.length < 2 && player_age >= obstacle_1_trigger) {
+  //   obstacles.push(new Obstacle())
+  // } 
+  // for (var i = 0; i < obstacles.length; i++) {
+  //   obstacles[i].update_show(players);
+  // }
   obstacles[0].update_show(players);
   if (player_age >= obstacle_1_trigger) {
     obstacles[1].update_show(players);
@@ -91,6 +95,7 @@ function draw() {
   // Is dead? 
   fill(0);
   if (manual && players[0].isDead()) {
+    all_dead = true; 
     textSize(70 + past_deaths*2);
     textAlign(CENTER, CENTER); 
     text("YOU LOSE!", appWidth/2, appHeight/2);
@@ -98,6 +103,7 @@ function draw() {
     //   pause();
     // }
   } else if (!manual && generation.dead) {
+    all_dead = true; 
     textSize(70);
     textAlign(CENTER, CENTER); 
     text("THEY DEAD!", appWidth/2, appHeight/2);
@@ -124,20 +130,6 @@ function draw() {
     generation.update(obstacles);
     generation.show();
   }
-  // for (var i=0; i<players.length; i++) {
-  //   players[i].update(obstacles);
-  //   players[i].show();
-  // }
-  // if (manual) {
-  //   players[0].update(); 
-  //   players[0].show(); 
-  // } else {
-  //   for (var player in players) {
-  //     player.update();
-  //     player.show();
-  //   }
-
-  // }
 }
 
 function start() {
@@ -152,7 +144,8 @@ function start() {
   // }
   obstacle_speed = 3; //2 //1.75
   players = [new Player()];
-  obstacles = [new Obstacle(2 * appHeight / 4), new Obstacle()]
+  // obstacles = [new Obstacle(2 * appHeight / 4)];
+  obstacles = [new Obstacle(2 * appHeight / 4), new Obstacle()];
   if (speed == 0) {
     pause(); 
   }
@@ -162,6 +155,7 @@ function start() {
   textAlign(LEFT, CENTER); 
   obstacle_1_trigger = (appWidth + 2*obstacleWidth + ((appWidth - obstacleWidth) / 2)) / obstacle_speed; 
   frames = 0;
+  all_dead = false; 
 }
 function touchStarted() {
   mousePressed()
@@ -211,12 +205,17 @@ function keyPressed() {
     pause();
   } else if (key == 'a' || key == 'A' || key == 'm' || key == 'M') {
     manual = !manual; 
+    high_score = 0;
     start();
   } else if (!manual && (key == 'k' || key == 'K')) {
     generation.dead = true;
   } else if (key == 's' || key == 'S') {
     if (speed == 0.6) { //1
       speed = 1.2;
+    } else if (speed == 1.2) {
+      speed = 4.8;
+    } else if (speed == 4.8) {
+      speed = 9.6;
     } else {
       speed = 0.6;
     }

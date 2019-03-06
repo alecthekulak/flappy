@@ -34,9 +34,12 @@ class Obstacle{
                 player_age = generation.age; 
             }
             this.generate_obstacles(-player_age);
-            score_counter++; 
-            if (score_counter > high_score) {
-                high_score = score_counter; 
+            if (!all_dead) {
+                score_counter++; 
+                if (score_counter > high_score) {
+                    high_score = score_counter; 
+                }
+
             }
         }
         this.top.update(players);
