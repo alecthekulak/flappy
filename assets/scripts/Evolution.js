@@ -2,6 +2,9 @@ var observations, network_output, results, new_weights, new_network, mutated_wei
 let temp2;
 let n_in = 5; 
 let n_out = 1; 
+var mutation_amount = 0.8; 
+// var mutation_amount = 0.2; 
+var jump_coefficient = 0.58; // (0,1) higher makes jumps less likely
 function randn_bm() {
     var u = 0, v = 0;
     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
@@ -9,19 +12,18 @@ function randn_bm() {
     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
 }
 function randomGauss(mu = 0.0, sigma = 1.0) {
-    var temp;
     if (sigma == 0) {
-        console.log("returning randomGauss with no sigma, mean: "+mu.toString());
-        temp = mu; 
+        return mu; 
     } else {
-        temp = mu + randn_bm() * sigma; 
+        var temp = mu + randn_bm() * sigma; 
+        return temp; 
     }
-    return temp; 
 }
 class Population{ 
     constructor(size) {
         this.size = size; 
         this.top_member_age = 0; 
+        this.top_member = undefined; 
         this.top_network = undefined; 
         this.top_network_id = undefined; 
         this.top_score = 0; 
@@ -40,29 +42,24 @@ class Population{
         }
     }
     nextGeneration() {
-        console.log("gen num: "+this.gen_num.toString()+" info ::");
+        console.log("          gen num: "+this.gen_num.toString()+" info ::");
         console.log("gap_dist: "+abs(temp2[1]-temp2[3]).toString());
-        // console.log("age: "+this.top_member_age);
+        console.log("age: "+this.top_member_age);
 
         this.age = 0; 
         this.dead = false; 
         this.living = this.size; 
+        this.top_score = 0; 
         this.gen_num++; 
 
         this.networks = []; 
-        console.log("num networks before: "+this.networks.length.toString());
-        console.log("weights: "+this.top_network.weights.toString());
-        if (this.top_network) { 
+        if (this.top_network && this.top_member_age > 120) { 
             this.members[0].reset(); 
-            console.log("clone res: "+this.top_network.clone(false).toString());
             this.networks.push(new Network(n_in, n_out, this.top_network.clone(false))); 
-            console.log("weights new1: "+this.networks[0].weights.toString());
-            console.log("weights new1 length: "+this.networks[0].weights.length.toString());
-            console.log("clone res: "+this.top_network.clone(false).toString());
             for (var i = 1; i < this.size; i++) {
                 this.members[i].reset(); 
                 if (i < this.size - 10) { 
-                    this.networks.push(new Network(n_in, n_out, this.top_network.clone(true, mutation_amount*pow(this.gen_num, -0.3))));
+                    this.networks.push(new Network(n_in, n_out, this.top_network.clone(true, mutation_amount*pow(this.gen_num, -0.3)*log(i)/(log(2)*(high_score+1)))));
                 } else {
                     this.networks.push(new Network());
                 }
@@ -73,9 +70,6 @@ class Population{
                 this.networks.push(new Network()); 
             }
         }
-        console.log("num networks after: "+this.networks.length.toString());
-        console.log("weights new2 length: "+this.networks[0].weights.length.toString());
-        console.log("weights new2: "+this.networks[0].weights.toString());
     }
     calc_survivors() {
         var living_members = 0; 
@@ -108,19 +102,26 @@ class Population{
                     this.best_distance = this.members[i].age - gap_dist; 
                     temp2 = observations.slice(); 
                     this.top_member_age = this.members[i].age; 
+                    this.top_member = this.members[i]; 
                     if (this.top_network_id !== i){ 
                         this.top_network = this.networks[i].deepCopy(); 
                         this.top_network_id = i; 
                     }
-                    if (this.members[i].score > this.top_score) {
-                        this.top_score = this.members[i].score; 
-                        if (this.top_score > high_score) {
-                            high_score = this.top_score;
-                        }
-                    }
+                    // if (this.members[i].score > this.top_score) {
+                    //     this.top_score = this.members[i].score; 
+                    //     // if (this.top_score > high_score) {
+                    //     //     high_score = this.top_score;
+                    //     // }
+                    // }
                 }
             }
             this.members[i].update();
+        }
+        if (this.top_member && !this.top_member.dead) {
+            this.top_score = this.top_member.score;
+            // if (this.top_member.score > this.top_score) {
+            //     this.top_score = this.top_member.score;
+            // }
         }
     }
     show() {
@@ -139,10 +140,10 @@ class Network{
             this.weights = weights_in.slice(); 
         } else {
             for (var j=0; j < this.n_inputs*this.n_outputs; j++) { 
-                this.weights.push(randomGauss(0, 0.1));
+                this.weights.push(randomGauss(0, mutation_amount));
             }
         }
-        console.log("network created, number of weights: "+this.weights.length.toString()+", first weight: "+this.weights[0].toString());
+        // console.log("network created, number of weights: "+this.weights.length.toString()+", first weight: "+this.weights[0].toString());
     }
     transform(raw_inputs) {
         var inputs = raw_inputs.slice(); 
@@ -159,7 +160,7 @@ class Network{
     }
     getOutput(raw_inputs) {
         var outputs = this.transform(raw_inputs);
-        return this.step(outputs[0] - 0.5);
+        return this.step(outputs[0] - jump_coefficient);
     }
     sigmoid(x) {
         return 1.0 / (1.0 + pow(Math.E, -x))

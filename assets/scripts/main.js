@@ -4,9 +4,8 @@ let jump_height = 10;
 let appWidth = 500; 
 let appHeight = 650; 
 let obstacleWidth = 90; 
-let gapHeight = 120; 
 // Counters, logs, etc
-var obstacle_speed, score_counter, past_deaths, past_taps, last_speed, high_score, frames;
+var obstacle_speed, score_counter, past_deaths, past_taps, last_speed, high_score, frames, gapHeight;
 var bg_size, ground_size, obstacle_1_trigger, all_dead; 
 var i, j, temp; 
 var mortal = true; 
@@ -14,8 +13,6 @@ var mortal = true;
 let canvas, players, obstacles, generation; 
 // AI Run 
 var manual = false; 
-// var mutation_amount = 0.8; 
-var mutation_amount = 0.5; 
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -62,6 +59,7 @@ function draw() {
     player_age = generation.age; 
     players = generation.members; 
   }
+  gapHeight = constrain(gapHeight, 120, 200-(player_age/300));
   // Sky
   background("white");
   tint(255, 100); 
@@ -95,33 +93,40 @@ function draw() {
     text("YOU LOSE!", appWidth/2, appHeight/2);
   } else if (!manual && generation.dead) {
     all_dead = true; 
-    textSize(70);
-    textAlign(CENTER, CENTER); 
-    text("THEY DEAD!", appWidth/2, appHeight/2);
+    // textSize(70);
+    // textAlign(CENTER, CENTER); 
+    // text("THEY DEAD!", appWidth/2, appHeight/2);
     start();
   }
   // Score Counter
   textSize(20);
   textAlign(LEFT, CENTER); 
-  text("High Score: " + high_score.toString(), 11, 40);
+  text("High Score: " + high_score.toString(), 11, 62);
   // Player 
   if (manual) {
     text("Score: " + score_counter.toString(), 11, 18);
-    text("Deaths: " + past_deaths.toString(), 11, 62);
+    text("Deaths: " + past_deaths.toString(), 11, 40);
     players[0].update(); 
     players[0].show(); 
   } else {
     generation.update(obstacles);
     generation.show();
     text("Generation: " + generation.gen_num.toString(), 11, 18);
-    text("Max age: " + round(generation.age).toString(), 11, 62);
+    text("Remaining birds: " + round(generation.living).toString(), 11, 40);
+    if (high_score > 0 && generation.gen_num > 0 || generation.top_score > 0) {
+      text("Current Score: " + round(generation.top_score).toString(), 11, 84);
+    }
   }
 }
 
 function start() {
+  gapHeight = 200;  // 120
   if (manual && players[0].isDead()) {
     past_deaths++; 
   } else if (!manual && generation.dead) {
+    var obs = generation.top_member.observeEnvironment(obstacles); 
+    console.log(`Speed Y: ${round(obs[0])}, Height Y: ${round(obs[1])}, X Dist Nearest Obst: ${round(obs[2])}, Gap Height Nearest Obst: ${round(obs[3])}, Time Since Flap: ${round(obs[4])}`)
+    console.log(`Obstacle right: ${round(obstacles[0].right())}, player X: ${round(generation.top_member.x)}`);
     generation.nextGeneration(); 
     players = generation.members; 
   }

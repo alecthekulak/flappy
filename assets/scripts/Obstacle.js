@@ -9,6 +9,7 @@ class Obstacle{
         this.gap = gap; 
         this.top = new Obstacle_Component(gap, true);
         this.bot = new Obstacle_Component(gap, false);
+        this.gapHeight = gapHeight; 
     }
     collide(player){
         if (this.top.collide(player) || this.bot.collide(player)) { 
@@ -20,7 +21,7 @@ class Obstacle{
         return (this.top.x + obstacleWidth) > 0; 
     }
     gap_y() {
-        return this.bot.y + gapHeight/2; 
+        return this.bot.y + this.gapHeight/2; 
     }
     left() {
         return this.top.x; 
@@ -41,7 +42,6 @@ class Obstacle{
                 if (score_counter > high_score) {
                     high_score = score_counter; 
                 }
-
             }
         }
         this.top.update(players);
@@ -56,12 +56,13 @@ class Obstacle_Component{
     constructor(gap, top = true){
         this.x = appWidth;
         this.top = top;
+        this.gapHeight = gapHeight; 
         if (top) {
-            this.height = gap - (gapHeight / 2);
+            this.height = gap - (this.gapHeight / 2);
             this.y = 0; 
         } else {
-            this.y = gap + (gapHeight / 2)
-            this.height = appHeight - (gap + (gapHeight / 2));
+            this.y = gap + (this.gapHeight / 2)
+            this.height = appHeight - (gap + (this.gapHeight / 2));
         }
     }
     collide(player){
@@ -81,12 +82,6 @@ class Obstacle_Component{
         }
         this.x -= obstacle_speed * speed;
     }
-    // update(player){ 
-    //     if (this.collide(player)) {
-    //         player.isDead(true);
-    //     }
-    //     this.x -= obstacle_speed * speed;
-    // }
     show(){
         fill(75, 20);
         if (this.top == true) {
