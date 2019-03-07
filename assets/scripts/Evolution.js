@@ -2,8 +2,7 @@ var observations, network_output, results, new_weights, new_network, mutated_wei
 let temp2;
 let n_in = 5; 
 let n_out = 1; 
-var mutation_amount = 0.8; 
-// var mutation_amount = 0.2; 
+var mutation_amount = 0.75; // 0.8 // 0.2
 var jump_coefficient = 0.58; // (0,1) higher makes jumps less likely
 function randn_bm() {
     var u = 0, v = 0;
@@ -43,23 +42,28 @@ class Population{
     }
     nextGeneration() {
         console.log("          gen num: "+this.gen_num.toString()+" info ::");
-        console.log("gap_dist: "+abs(temp2[1]-temp2[3]).toString());
-        console.log("age: "+this.top_member_age);
+        console.log("gap_dist: "+(round(100*abs(temp2[1]-temp2[3]))/100).toString());
+        console.log("age: "+round(this.top_member_age).toString());
 
         this.age = 0; 
+        if ((starting_birds - high_score) < this.size && (starting_birds - high_score) > 5) {
+            this.size = starting_birds - high_score;
+            this.members = this.members.slice(0, this.size); 
+        }
         this.dead = false; 
         this.living = this.size; 
         this.score = 0; 
         this.gen_num++; 
 
         this.networks = []; 
+        var coefficient = mutation_amount*pow(this.gen_num - 1, -0.1)/log(high_score+1);
         if (this.top_network && this.top_member_age > 120) { 
             this.members[0].reset(); 
             this.networks.push(new Network(n_in, n_out, this.top_network.clone(false))); 
             for (var i = 1; i < this.size; i++) {
                 this.members[i].reset(); 
-                if (i < this.size - 10) { 
-                    this.networks.push(new Network(n_in, n_out, this.top_network.clone(true, mutation_amount*pow(this.gen_num, -0.3)*log(i)/(log(2)*(high_score+1)))));
+                if (i < starting_birds * 0.7) { 
+                    this.networks.push(new Network(n_in, n_out, this.top_network.clone(true, log(i)*coefficient)));
                 } else {
                     this.networks.push(new Network());
                 }

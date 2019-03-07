@@ -13,6 +13,7 @@ var mortal = true;
 let canvas, players, obstacles, generation; 
 // AI Run 
 var manual = false; 
+var starting_birds = 80; 
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -42,7 +43,7 @@ function setup() { // Make a title screen
   if (manual) {
     players = [new Player()]; 
   } else {
-    generation = new Population(80); 
+    generation = new Population(starting_birds); 
     players = generation.members; 
   }
 
