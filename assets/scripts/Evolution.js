@@ -26,7 +26,6 @@ class Population{
         this.top_member = undefined; 
         this.top_network = undefined; 
         this.top_network_id = undefined; 
-        // this.top_score = 0; 
         this.score = 0; 
         this.best_distance = 0; 
         this.gen_num = 0; 

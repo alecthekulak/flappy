@@ -115,7 +115,6 @@ function draw() {
     text("Remaining birds: " + round(generation.living).toString(), 11, 40);
     if (high_score > 0 && generation.gen_num > 0 || generation.top_score > 0) {
       text("Current Score: " + round(generation.score).toString(), 11, 84);
-      // text("Current Score: " + round(generation.top_score).toString(), 11, 84);
     }
   }
 }
@@ -135,7 +134,7 @@ function start() {
   players = [new Player()];
   obstacles = [new Obstacle(2 * appHeight / 4), new Obstacle()];
   if (speed == 0) {
-    pause(); 
+    toggle_pause(); 
   }
   score_counter = 0; 
   past_taps = 0;
@@ -156,7 +155,10 @@ function mousePressed() {
       if (past_taps >= 3) {
         start(); 
       }
-    } else {
+    } else if (manual) {
+      if (is_paused()) {
+        toggle_pause(); 
+      }
       for (i=0; i<players.length; i++) {
         players[i].flap(); 
       }
@@ -169,16 +171,14 @@ function mousePressed() {
   }
 }
 function keyPressed() {
-  if (key == ' ') {
+  if (manual && key == ' ') {
     for (i=0; i<players.length; i++) {
       players[i].flap(); 
     }
-  } else if (key == 'r' || key == 'R') {
-    if (manual || generation.dead) { 
-      start(); 
-    } 
+  } else if (manual && key == 'r' || key == 'R') {
+    start(); 
   } else if (key == 'p' || key == 'P') {
-    pause();
+    toggle_pause();
   } else if (key == 'a' || key == 'A' || key == 'm' || key == 'M') {
     manual = !manual; 
     high_score = 0;
@@ -204,7 +204,10 @@ function keyReleased() {
     speed = 0.6; 
   }
 }
-function pause() {
+function is_paused() {
+  return speed == 0; 
+}
+function toggle_pause() {
   if (speed !== 0) {
     last_speed = speed;
     speed = 0; 
