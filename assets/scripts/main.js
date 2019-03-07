@@ -114,7 +114,8 @@ function draw() {
     text("Generation: " + generation.gen_num.toString(), 11, 18);
     text("Remaining birds: " + round(generation.living).toString(), 11, 40);
     if (high_score > 0 && generation.gen_num > 0 || generation.top_score > 0) {
-      text("Current Score: " + round(generation.top_score).toString(), 11, 84);
+      text("Current Score: " + round(generation.score).toString(), 11, 84);
+      // text("Current Score: " + round(generation.top_score).toString(), 11, 84);
     }
   }
 }

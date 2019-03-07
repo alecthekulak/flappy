@@ -26,7 +26,8 @@ class Population{
         this.top_member = undefined; 
         this.top_network = undefined; 
         this.top_network_id = undefined; 
-        this.top_score = 0; 
+        // this.top_score = 0; 
+        this.score = 0; 
         this.best_distance = 0; 
         this.gen_num = 0; 
         this.dead = false; 
@@ -49,7 +50,7 @@ class Population{
         this.age = 0; 
         this.dead = false; 
         this.living = this.size; 
-        this.top_score = 0; 
+        this.score = 0; 
         this.gen_num++; 
 
         this.networks = []; 
@@ -96,6 +97,9 @@ class Population{
                 // Logging if it's the best one
                 if (this.members[i].age > this.age) {
                     this.age = this.members[i].age; 
+                    if (this.members[i].score > this.score) {
+                        this.score = this.members[i].score;
+                    }
                 }
                 var gap_dist = abs(observations[1]-observations[3]); 
                 if ((this.members[i].age - gap_dist) > this.best_distance) {
@@ -107,21 +111,9 @@ class Population{
                         this.top_network = this.networks[i].deepCopy(); 
                         this.top_network_id = i; 
                     }
-                    // if (this.members[i].score > this.top_score) {
-                    //     this.top_score = this.members[i].score; 
-                    //     // if (this.top_score > high_score) {
-                    //     //     high_score = this.top_score;
-                    //     // }
-                    // }
                 }
             }
             this.members[i].update();
-        }
-        if (this.top_member && !this.top_member.dead) {
-            this.top_score = this.top_member.score;
-            // if (this.top_member.score > this.top_score) {
-            //     this.top_score = this.top_member.score;
-            // }
         }
     }
     show() {
