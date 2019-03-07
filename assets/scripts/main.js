@@ -1,6 +1,6 @@
 let speed = 0.6; 
-let gravity = 0.4; // 1
-let jump_height = 10; // 14
+let gravity = 0.4;
+let jump_height = 10;
 let appWidth = 500; 
 let appHeight = 650; 
 let obstacleWidth = 90; 
@@ -93,9 +93,6 @@ function draw() {
     textSize(70 + past_deaths*2);
     textAlign(CENTER, CENTER); 
     text("YOU LOSE!", appWidth/2, appHeight/2);
-    // if (speed !== 0 && manual) {
-    //   pause();
-    // }
   } else if (!manual && generation.dead) {
     all_dead = true; 
     textSize(70);
@@ -107,22 +104,17 @@ function draw() {
   textSize(20);
   textAlign(LEFT, CENTER); 
   text("High Score: " + high_score.toString(), 11, 40);
+  // Player 
   if (manual) {
     text("Score: " + score_counter.toString(), 11, 18);
     text("Deaths: " + past_deaths.toString(), 11, 62);
-  } else {
-    text("Generation: " + generation.gen_num.toString(), 11, 18);
-  }
-  // text("age: " + players[0].age.toString(), 11, 84);
-  // text("speed: " + randomGauss().toString(), 11, 84);
-  // text("trigger: " + obstacle_1_trigger.toString(), 11, 84 );
-  // Player 
-  if (manual) {
     players[0].update(); 
     players[0].show(); 
   } else {
     generation.update(obstacles);
     generation.show();
+    text("Generation: " + generation.gen_num.toString(), 11, 18);
+    text("Max age: " + round(generation.age).toString(), 11, 62);
   }
 }
 
@@ -133,12 +125,8 @@ function start() {
     generation.nextGeneration(); 
     players = generation.members; 
   }
-  // else if (generation.isDead()) {
-  //   past_deaths++; 
-  // }
   obstacle_speed = 3; //2 //1.75
   players = [new Player()];
-  // obstacles = [new Obstacle(2 * appHeight / 4)];
   obstacles = [new Obstacle(2 * appHeight / 4), new Obstacle()];
   if (speed == 0) {
     pause(); 
@@ -156,16 +144,7 @@ function touchStarted() {
 }
 function mousePressed() {
   if (0 < mouseX && mouseX <= appWidth &&
-      0 < mouseY && mouseY <= windowHeight) { //appHeight
-    // for (i=0; i<players.length; i++) {
-    //   players[i].flap(); 
-    // }
-    // if (manual && !players[0].isDead()) {
-    //   for (i=0; i<players.length; i++) {
-    //     players[i].flap(); 
-    //   }
-    //   // players[0].flap(); 
-    // } else 
+      0 < mouseY && mouseY <= windowHeight) { 
     if (manual && players[0].isDead()) {
       past_taps++; 
       if (past_taps >= 3) {
@@ -192,9 +171,6 @@ function keyPressed() {
     if (manual || generation.dead) { 
       start(); 
     } 
-    // else if (generation.dead) {
-    //   StaticRange()
-    // }
   } else if (key == 'p' || key == 'P') {
     pause();
   } else if (key == 'a' || key == 'A' || key == 'm' || key == 'M') {
@@ -225,7 +201,7 @@ function keyReleased() {
 function pause() {
   if (speed !== 0) {
     last_speed = speed;
-    speed = 0;  //
+    speed = 0; 
   } else {
     speed = last_speed; 
   }

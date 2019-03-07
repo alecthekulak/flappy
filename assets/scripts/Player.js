@@ -83,8 +83,7 @@ class Player{
         var nearest_obstacle = obstacles[0];
         var nearest_obstacle_distance = appWidth; 
         for (var j; j<obstacles.length; j++){
-            if (obstacles[j].right() >= this.x && obstacles[j].left() > 0 && 
-            obstacles[j].left() <= nearest_obstacle_distance) {
+            if (obstacles[j].right() >= this.x && obstacles[j].left() <= nearest_obstacle_distance) {
                 nearest_obstacle = obstacles[j]; 
                 nearest_obstacle_distance = obstacles[j].left(); 
             }

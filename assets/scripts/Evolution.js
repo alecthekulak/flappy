@@ -1,5 +1,7 @@
-var observations, network_output, outputs, results, new_weights, new_network, mutated_weights, gap_dist, weights_in; 
+var observations, network_output, results, new_weights, new_network, mutated_weights, gap_dist; 
 let temp2;
+let n_in = 5; 
+let n_out = 1; 
 function randn_bm() {
     var u = 0, v = 0;
     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
@@ -7,19 +9,23 @@ function randn_bm() {
     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
 }
 function randomGauss(mu = 0.0, sigma = 1.0) {
+    var temp;
     if (sigma == 0) {
         console.log("returning randomGauss with no sigma, mean: "+mu.toString());
-        return mu; 
+        temp = mu; 
+    } else {
+        temp = mu + randn_bm() * sigma; 
     }
-    return mu + randn_bm() * sigma; 
+    return temp; 
 }
 class Population{ 
     constructor(size) {
         this.size = size; 
-        this.top_member = false; 
-        this.top_network = false; 
+        this.top_member_age = 0; 
+        this.top_network = undefined; 
+        this.top_network_id = undefined; 
         this.top_score = 0; 
-        this.top_dist = 0; 
+        this.best_distance = 0; 
         this.gen_num = 0; 
         this.dead = false; 
         this.living = this.size; 
@@ -32,12 +38,11 @@ class Population{
             this.members.push(new Player()); 
             this.networks.push(new Network()); 
         }
-        this.top_network = this.networks[0].deepCopy(); 
     }
     nextGeneration() {
         console.log("gen num: "+this.gen_num.toString()+" info ::");
         console.log("gap_dist: "+abs(temp2[1]-temp2[3]).toString());
-        // console.log("age: "+this.top_member.age);
+        // console.log("age: "+this.top_member_age);
 
         this.age = 0; 
         this.dead = false; 
@@ -47,31 +52,30 @@ class Population{
         this.networks = []; 
         console.log("num networks before: "+this.networks.length.toString());
         console.log("weights: "+this.top_network.weights.toString());
-        if (typeof(this.top_network) !== "boolean") { 
+        if (this.top_network) { 
             this.members[0].reset(); 
-            this.networks.push(new Network(weights_in=this.top_network.clone(false))); 
+            console.log("clone res: "+this.top_network.clone(false).toString());
+            this.networks.push(new Network(n_in, n_out, this.top_network.clone(false))); 
             console.log("weights new1: "+this.networks[0].weights.toString());
             console.log("weights new1 length: "+this.networks[0].weights.length.toString());
             console.log("clone res: "+this.top_network.clone(false).toString());
             for (var i = 1; i < this.size; i++) {
                 this.members[i].reset(); 
-                if (i < this.size - 10) { //this.networks.length
-                    this.networks.push(new Network(weights_in=this.top_network.clone(true, mutation_amount*pow(this.gen_num, -0.3))));
+                if (i < this.size - 10) { 
+                    this.networks.push(new Network(n_in, n_out, this.top_network.clone(true, mutation_amount*pow(this.gen_num, -0.3))));
                 } else {
                     this.networks.push(new Network());
                 }
             }
         } else {
             for (var i = 0; i < this.size; i++) {
-                this.members.push(new Player()); 
+                this.members[i].reset(); 
                 this.networks.push(new Network()); 
             }
         }
         console.log("num networks after: "+this.networks.length.toString());
         console.log("weights new2 length: "+this.networks[0].weights.length.toString());
         console.log("weights new2: "+this.networks[0].weights.toString());
-        console.log("weights1 new2 length: "+this.networks[1].weights.length.toString());
-        console.log("weights1 new2: "+this.networks[1].weights.toString());
     }
     calc_survivors() {
         var living_members = 0; 
@@ -100,11 +104,14 @@ class Population{
                     this.age = this.members[i].age; 
                 }
                 var gap_dist = abs(observations[1]-observations[3]); 
-                if (this.members[i].age - gap_dist > this.top_dist) {
-                    this.top_dist = this.members[i].age - gap_dist; 
+                if ((this.members[i].age - gap_dist) > this.best_distance) {
+                    this.best_distance = this.members[i].age - gap_dist; 
                     temp2 = observations.slice(); 
-                    this.top_member = this.members[i]; 
-                    this.top_network = this.networks[i].deepCopy(); 
+                    this.top_member_age = this.members[i].age; 
+                    if (this.top_network_id !== i){ 
+                        this.top_network = this.networks[i].deepCopy(); 
+                        this.top_network_id = i; 
+                    }
                     if (this.members[i].score > this.top_score) {
                         this.top_score = this.members[i].score; 
                         if (this.top_score > high_score) {
@@ -123,33 +130,19 @@ class Population{
     }
 }
 class Network{
-    constructor(n_inputs=5, n_outputs=1, weights_in=undefined) {
+    constructor(n_inputs=n_in, n_outputs=n_out, weights_in) {
         this.n_inputs = n_inputs + 1;
         this.n_outputs = n_outputs; 
         this.weights = []; 
         if (weights_in) {
-            console.log("Network constructor: weights in: "+weights_in.toString());
+            // console.log("Network constructor: weights in: "+weights_in.toString());
             this.weights = weights_in.slice(); 
         } else {
             for (var j=0; j < this.n_inputs*this.n_outputs; j++) { 
                 this.weights.push(randomGauss(0, 0.1));
             }
         }
-        // if (weights_in === undefined) {
-        //     for (var j=0; j < this.n_inputs*this.n_outputs; j++) { 
-        //         this.weights.push(randomGauss(0, 0.1));
-        //     }
-        // } else {
-        //     // console.log("manually defined weights");
-        //     for (var j=0; j < weights_in.length; j++) { 
-        //         this.weights.push(weights_in[j]);
-        //     }
-        //     // this.weights = weights_in; 
-        //     // console.log("   values: "+weights_in.toString());
-        //     // console.log("   values: "+this.weights.toString());
-        // }
-        console.log("network created, number of weights: "+this.weights.length.toString()+", first weight: ");
-        // console.log("network created, number of weights: "+this.weights.length.toString()+", first weight: "+this.weights[0].toString());
+        console.log("network created, number of weights: "+this.weights.length.toString()+", first weight: "+this.weights[0].toString());
     }
     transform(raw_inputs) {
         var inputs = raw_inputs.slice(); 
@@ -164,8 +157,8 @@ class Network{
         }
         return results; 
     }
-    getOutput(inputs) {
-        var outputs = this.transform(inputs);
+    getOutput(raw_inputs) {
+        var outputs = this.transform(raw_inputs);
         return this.step(outputs[0] - 0.5);
     }
     sigmoid(x) {
@@ -183,43 +176,12 @@ class Network{
     clone(mutate = true, stddev = mutation_amount) {
         if (mutate) {
             var mutated_weights = []; 
-            for (var j=0; j<this.weights.length; j++) {
+            for (var j=0; j < this.weights.length; j++) {
                 mutated_weights.push(this.weights[j] + randomGauss(0, stddev));
             }
-            // new_weights = mutated_weights;
             return mutated_weights; 
         } else {
             return this.weights.slice(); 
-            // var new_weights = []; 
-            // // new_weights = this.weights.slice();
-            // for (var j=0; j < this.weights.length; j++) { 
-            //     new_weights.push(this.weights[j]);
-            // }
-            // return new_weights; 
         }
-        // new_network = new Network(this.n_inputs, this.n_outputs, new_weights); 
-        // return new_network;
-        // return new_weights; 
     }
 }
-// Math.randomGaussian = function(mean = 0.0, standardDeviation = 1.0) {
-//     if (standardDeviation == 0) {
-//         return mean; 
-//     }
-//     if (Math.randomGaussian.nextGaussian !== undefined) {
-//         var nextGaussian = Math.randomGaussian.nextGaussian;
-//         delete Math.randomGaussian.nextGaussian;
-//         return (nextGaussian * standardDeviation) + mean;
-//     } else {
-//         var v1, v2, s, multiplier;
-//         do {
-//             v1 = 2 * Math.random() - 1; // between -1 and 1
-//             v2 = 2 * Math.random() - 1; // between -1 and 1
-//             s = v1 * v1 + v2 * v2;
-//         } while (s >= 1 || s == 0);
-//         multiplier = Math.sqrt(-2 * Math.log(s) / s);
-//         Math.randomGaussian.nextGaussian = v2 * multiplier;
-//         return (v1 * multiplier * standardDeviation) + mean;
-//     }
-
-// };

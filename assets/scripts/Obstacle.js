@@ -3,13 +3,12 @@ class Obstacle{
         this.generate_obstacles(gap);
     }
     generate_obstacles(gap){
-        if (gap <= 0 || gap > appHeight) {
+        if (gap < gapHeight || gap > (appHeight - gapHeight)) {
             gap = floor(random(gapHeight, appHeight - gapHeight));
         }
         this.gap = gap; 
         this.top = new Obstacle_Component(gap, true);
         this.bot = new Obstacle_Component(gap, false);
-
     }
     collide(player){
         if (this.top.collide(player) || this.bot.collide(player)) { 
