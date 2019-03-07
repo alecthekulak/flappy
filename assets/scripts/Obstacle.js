@@ -17,8 +17,11 @@ class Obstacle{
         } 
         return false; 
     }
-    onScreen(){
+    onScreen() {
         return (this.top.x + obstacleWidth) > 0; 
+    }
+    gap_y() {
+        return this.bot.y + gapHeight/2; 
     }
     left() {
         return this.top.x; 

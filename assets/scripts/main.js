@@ -14,8 +14,8 @@ var mortal = true;
 let canvas, players, obstacles, generation; 
 // AI Run 
 var manual = false; 
-var mutation_amount = 0.8; 
-// var mutation_amount = 0.5; 
+// var mutation_amount = 0.8; 
+var mutation_amount = 0.5; 
 
 function preload() {
   bird_down = loadImage("assets/images/bird_down_wings.png");
@@ -45,7 +45,7 @@ function setup() { // Make a title screen
   if (manual) {
     players = [new Player()]; 
   } else {
-    generation = new Population(100); 
+    generation = new Population(80); 
     players = generation.members; 
   }
 
@@ -72,12 +72,6 @@ function draw() {
   }
   noTint();
   // Obstacles 
-  // if (obstacles.length < 2 && player_age >= obstacle_1_trigger) {
-  //   obstacles.push(new Obstacle())
-  // } 
-  // for (var i = 0; i < obstacles.length; i++) {
-  //   obstacles[i].update_show(players);
-  // }
   obstacles[0].update_show(players);
   if (player_age >= obstacle_1_trigger) {
     obstacles[1].update_show(players);

@@ -91,7 +91,8 @@ class Player{
             }
         }
         observed_variables[2] = nearest_obstacle_distance; // Distance to nearest obstacle 
-        observed_variables[3] = nearest_obstacle.gap; // Gap height for nearest obstacle 
+        observed_variables[3] = nearest_obstacle.gap_y(); // Gap height for nearest obstacle 
+        observed_variables[4] = this.flapping; // How long it has been since last flap  
         return observed_variables; 
     }
     reset() {
