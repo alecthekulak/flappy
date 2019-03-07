@@ -1,4 +1,3 @@
-var observed_variables;
 class Player{ 
     sprite_top_gap = 11; 
     sprite_height = 15; 
@@ -78,7 +77,7 @@ class Player{
     }
     // For AI: 
     observeEnvironment(obstacles) {
-        observed_variables = []; 
+        var observed_variables = []; 
         observed_variables[0] = this.speed_y; // Verticle speed 
         observed_variables[1] = this.y; // Verticle height 
         var nearest_obstacle = obstacles[0];

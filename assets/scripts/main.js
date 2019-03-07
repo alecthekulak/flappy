@@ -114,7 +114,7 @@ function draw() {
     text("Generation: " + generation.gen_num.toString(), 11, 18);
   }
   // text("age: " + players[0].age.toString(), 11, 84);
-  // text("speed: " + randomGaussian().toString(), 11, 84);
+  // text("speed: " + randomGauss().toString(), 11, 84);
   // text("trigger: " + obstacle_1_trigger.toString(), 11, 84 );
   // Player 
   if (manual) {
@@ -201,6 +201,8 @@ function keyPressed() {
     manual = !manual; 
     high_score = 0;
     start();
+  } else if (key == 'f' || key == 'F') {
+    speed = 1.8; 
   } else if (!manual && (key == 'k' || key == 'K')) {
     generation.dead = true;
   } else if (key == 's' || key == 'S') {
@@ -213,6 +215,11 @@ function keyPressed() {
     } else {
       speed = 0.6;
     }
+  }
+}
+function keyReleased() {
+  if (key == 'f' || key == 'F') {
+    speed = 0.6; 
   }
 }
 function pause() {
