@@ -89,9 +89,10 @@ class Population{
         return this.living;
     }
     update(obstacles) {
-        this.calc_survivors()
+        var living_members = 0; 
         for (var i=0; i < this.size; i++) {
             if (!this.members[i].dead) {
+                living_members += 1; 
                 observations = this.members[i].observeEnvironment(obstacles); 
                 network_output = this.networks[i].getOutput(observations); 
                 if (network_output == 1) {
@@ -118,10 +119,16 @@ class Population{
             }
             this.members[i].update();
         }
+        if (living_members == 0) {
+            this.dead = true; 
+        }
+        this.living = living_members; 
     }
     show() {
         for (var i=0; i<this.size; i++) {
-            this.members[i].show();
+            if (this.members[i].x >= -50) {
+                this.members[i].show();
+            }
         }
     }
 }
