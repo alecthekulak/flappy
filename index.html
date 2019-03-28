@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Pong</title>
+        <title>Flappy Webpage</title>
         <meta charset="UTF-8">
         <!-- CSS Stylesheet -->
         <link rel="stylesheet" type="text/css" href="./assets/stylesheets/styles.css">
@@ -10,20 +10,27 @@
         <script language="javascript" type="text/javascript" src="./assets/libraries/p5.dom.js"></script>
         <!-- Javascript files -->
         <script language="javascript" type="text/javascript" src="./assets/scripts/main.js"></script>
+        <script language="javascript" type="text/javascript" src="./assets/scripts/Player.js"></script>
+        <script language="javascript" type="text/javascript" src="./assets/scripts/Obstacle.js"></script>
+        <script language="javascript" type="text/javascript" src="./assets/scripts/Evolution.js"></script>
     </head>
     <body>
+        <div id="left-section" class="text-section">  
+                This project was created using <a href="https://p5js.org/">p5.js</a> and is hosted by 
+                <a href="https://pages.github.com/">GitHub Pages</a>. All code (aside from the p5 libraries) was written 
+                from scratch. All sprites were (unfortunately) created manually (give me a break, I'm no graphic designer).
+                <br><br> 
+                Click <b>a</b> or <b>m</b> to toggle between AI mode and manual. 
+                <br><br>
+                <u>Manual mode</u>:
+                <br>
+                Click <b>space</b> or <b>left-mouse</b> to jump, <b>r</b> to restart, <b>p</b> to pause, <b>s</b> to change speed. 
+                <br><br> 
+                The code is shared under a <a href="https://github.com/alecthekulak/flappy/blob/master/LICENSE">GNU General Public License</a> and is available on <a href="https://github.com/alecthekulak/flappy">my GitHub</a>.
+            </div>
         <div id="p5Container">
         </div>
-        <div id="bottom-section" class="text-section">  
-            Move the paddle left (&larr; or <i>a</i>) and right (&rarr; or <i>d</i>) to bounce the ball back at your opponent. 
-            <br>
-            <br> 
-            This project was created using <a href="https://p5js.org/">p5.js</a> and is hosted by 
-            <a href="https://pages.github.com/">GitHub Pages</a>. All code (aside from the p5 libraries) was written 
-            from scratch, by me, <a href="https://www.linkedin.com/in/alec-kulakowski/">Alec Kulakowski</a>. 
-            <br>
-            <br> 
-            The code is shared under a <a href="https://github.com/alecthekulak/pong/blob/master/LICENSE">GNU General Public License</a> and is available on <a href="https://github.com/alecthekulak/pong">my GitHub</a>.
-            </div>
+        <div id="right-section" class="text-section">
+        </div>
     </body>
 </html>
