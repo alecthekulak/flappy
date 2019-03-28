@@ -83,7 +83,7 @@ class Population{
             }
         }
         if (living_members == 0) {
-            this.dead = true; 
+            this.dead = true;  
         }
         this.living = living_members; 
         return this.living;
